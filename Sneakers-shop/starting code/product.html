@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SneakerCompare — Product</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css" />
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header__inner">
+            <a class="logo" href="index.html">
+                <span class="logo__mark">S</span>
+                <span class="logo__text">SneakerCompare</span>
+            </a>
+
+            <nav class="nav nav--desktop">
+                <a href="index.html">Home</a>
+                <a href="search.html">Browse</a>
+                <a href="stores.html">Stores</a>
+            </nav>
+
+            <div class="header__actions">
+                <a class="btn btn--ghost btn--icon" href="favorites.html">♥</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="breadcrumbs">
+        <div class="container">
+            <nav aria-label="Breadcrumb">
+                <a href="index.html">Home</a>
+                <span class="sep">/</span>
+                <a href="search.html">Sneakers</a>
+                <span class="sep">/</span>
+                <span class="current line-clamp-1">Air Max 90 “Infrared”</span>
+            </nav>
+        </div>
+    </div>
+
+    <main class="container">
+        <section class="product-top">
+            <!-- Gallery -->
+            <div class="gallery">
+                <div class="gallery__main">
+                    <img src="./img/AIR+JORDAN+1+RETRO+HIGH+OG.jpg" alt="Product image"
+                        style="width:100%;height:100%;object-fit:cover;">
+                    <!-- кнопки prev/next — JS потом -->
+                    <button class="icon-btn" style="position:absolute; left:14px; top:50%; transform:translateY(-50%);"
+                        type="button">‹</button>
+                    <button class="icon-btn" style="position:absolute; right:14px; top:50%; transform:translateY(-50%);"
+                        type="button">›</button>
+                </div>
+
+                <div class="gallery__thumbs">
+                    <button class="thumb is-active" type="button"><img src="./img/AIR+JORDAN+1+RETRO+HIGH+OG.jpg"
+                            alt=""></button>
+                    <button class="thumb" type="button"><img src="https://placehold.co/200x200/png" alt=""></button>
+                    <button class="thumb" type="button"><img src="https://placehold.co/200x200/png" alt=""></button>
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div style="padding-top:6px;">
+                <div class="kicker" style="color:hsl(var(--primary));">Nike</div>
+                <h1 style="font-size:40px; font-weight:900; margin: 8px 0 12px;">Air Max 90 “Infrared”</h1>
+
+                <div class="rating" style="margin-bottom:14px;">
+                    <span class="rating__stars" style="--rating:4.6; --size:18px;"></span>
+                    <span class="rating__value" style="font-size:16px;">4.6</span>
+                    <span class="rating__count" style="font-size:16px;">(1,284)</span>
+                </div>
+
+                <div style="display:flex; align-items:baseline; gap:12px; margin-bottom:14px;">
+                    <span class="price price--xl price--primary"><span class="price__prefix">from</span>$149</span>
+                    <span class="muted" style="font-weight:800;">across 12 stores</span>
+                </div>
+
+                <div class="product-actions">
+                    <button class="btn btn--outline btn--lg" type="button">♥ Save</button>
+                    <button class="btn btn--outline btn--lg" type="button">↗ Share</button>
+                </div>
+
+                <div class="specs">
+                    <h3 style="font-size:18px; font-weight:900;">Details</h3>
+
+                    <div class="dl">
+                        <div>
+                            <div class="dt">SKU</div>
+                            <div class="dd">AM90-IR-2025</div>
+                        </div>
+                        <div>
+                            <div class="dt">Colorway</div>
+                            <div class="dd">Infrared / Black</div>
+                        </div>
+                        <div>
+                            <div class="dt">Material</div>
+                            <div class="dd">Leather / Mesh</div>
+                        </div>
+                        <div>
+                            <div class="dt">Release Date</div>
+                            <div class="dd">May 12, 2025</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:14px;">
+                        <div class="dt" style="margin-bottom:8px;">Available Sizes (EU)</div>
+                        <div class="sizes">
+                            <span class="size">41</span>
+                            <span class="size">42</span>
+                            <span class="size">43</span>
+                            <span class="size">44</span>
+                        </div>
+                    </div>
+
+                    <div class="block">
+                        <h3 style="font-size:18px; font-weight:900; margin-bottom:8px;">Description</h3>
+                        <p class="muted" style="line-height:1.6;">
+                            Classic silhouette with modern comfort. Placeholder description — подставишь из данных.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section style="margin-top:24px;">
+            <div class="placeholder">
+                <h3 style="font-weight:900; margin-bottom:10px;">Price History</h3>
+                <div class="muted" style="height:140px; display:grid; place-items:center;">Price history chart coming
+                    soon</div>
+            </div>
+        </section>
+
+        <section class="offers">
+            <h2 style="font-size:28px; font-weight:900; margin: 22px 0 12px;">Compare 12 Store Offers</h2>
+
+            <div class="offer-sort">
+                <span class="muted" style="font-weight:800;">Sort by:</span>
+                <button class="sort-link is-active" type="button">Price ↕</button>
+                <button class="sort-link" type="button">Rating ↕</button>
+                <button class="sort-link" type="button">Delivery ↕</button>
+            </div>
+
+            <!-- Offer card 1 (best price) -->
+            <article class="offer-card offer-card--best">
+                <div class="store-badge">
+                    <div class="store-badge__logo"><img src="https://placehold.co/120x120/png" alt=""></div>
+                    <div>
+                        <div style="font-weight:900;">SneakerStore</div>
+                        <div class="rating">
+                            <span class="rating__stars" style="--rating:4.7"></span>
+                            <span class="rating__value">4.7</span>
+                            <span class="rating__count">(12,340)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="offer-meta">
+                    <div class="meta-col">
+                        <div class="label">Product rating</div>
+                        <div class="rating">
+                            <span class="rating__stars" style="--rating:4.6"></span>
+                            <span class="rating__value">4.6</span>
+                        </div>
+                    </div>
+
+                    <div class="meta-col">
+                        <div class="label">Delivery</div>
+                        <div style="font-weight:900;">2 days</div>
+                        <div class="muted" style="font-size:12px;">Free</div>
+                    </div>
+
+                    <div class="meta-col">
+                        <div class="label">Status</div>
+                        <div class="status status--ok">✓ In Stock</div>
+                    </div>
+                </div>
+
+                <div class="offer-cta">
+                    <div style="text-align:right;">
+                        <div class="price price--lg price--primary">$149</div>
+                        <div class="muted" style="font-size:12px;">+ $0 shipping</div>
+                    </div>
+                    <a class="btn btn--primary" href="#" target="_blank" rel="noreferrer">Go to store ↗</a>
+                    <button class="btn btn--ghost btn--icon" type="button" title="Report wrong price">⚠</button>
+                </div>
+            </article>
+
+            <!-- Offer card 2 -->
+            <article class="offer-card">
+                <div class="store-badge">
+                    <div class="store-badge__logo"><img src="https://placehold.co/120x120/png" alt=""></div>
+                    <div>
+                        <div style="font-weight:900;">UrbanKicks</div>
+                        <div class="rating">
+                            <span class="rating__stars" style="--rating:4.4"></span>
+                            <span class="rating__value">4.4</span>
+                            <span class="rating__count">(5,120)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="offer-meta">
+                    <div class="meta-col">
+                        <div class="label">Product rating</div>
+                        <div class="rating">
+                            <span class="rating__stars" style="--rating:4.5"></span>
+                            <span class="rating__value">4.5</span>
+                        </div>
+                    </div>
+                    <div class="meta-col">
+                        <div class="label">Delivery</div>
+                        <div style="font-weight:900;">5 days</div>
+                        <div class="muted" style="font-size:12px;">$9</div>
+                    </div>
+                    <div class="meta-col">
+                        <div class="label">Status</div>
+                        <div class="status muted">✕ Out of Stock</div>
+                    </div>
+                </div>
+
+                <div class="offer-cta">
+                    <div style="text-align:right;">
+                        <div class="price price--lg price--primary">$159</div>
+                        <div class="muted" style="font-size:12px;">+ $9 shipping</div>
+                    </div>
+                    <a class="btn btn--primary" href="#" target="_blank" rel="noreferrer">Go to store ↗</a>
+                    <button class="btn btn--ghost btn--icon" type="button">⚠</button>
+                </div>
+            </article>
+        </section>
+
+        <div style="height:60px;"></div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__bottom">© 2025 SneakerCompare. All rights reserved.</div>
+        </div>
+    </footer>
+</body>
+
+</html>

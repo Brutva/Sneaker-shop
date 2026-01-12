@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SneakerCompare — Favorites</title>
+    <link rel="stylesheet" href="./css/style.css" />
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header__inner">
+            <a class="logo" href="index.html"><span class="logo__mark">S</span><span
+                    class="logo__text">SneakerCompare</span></a>
+            <nav class="nav nav--desktop">
+                <a href="index.html">Home</a>
+                <a href="search.html">Browse</a>
+                <a href="stores.html">Stores</a>
+            </nav>
+            <div class="header__actions">
+                <a class="btn btn--ghost btn--icon" href="favorites.html" aria-current="page">♥</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="page">
+        <div class="container">
+            <h1 class="page__title">My Favorites</h1>
+            <p class="page__sub">2 saved sneakers</p>
+
+            <div class="grid-products" style="margin-top:18px;">
+                <article class="product-card">
+                    <a href="product.html" class="product-card__media">
+                        <img class="product-card__img" src="https://placehold.co/600x600/png" alt="Sneaker">
+                        <div class="product-card__actions">
+                            <button class="icon-btn icon-btn--danger" type="button">♥</button>
+                        </div>
+                        <div class="product-card__badge badge">🛍 <span>12 offers</span></div>
+                    </a>
+                    <div class="product-card__body">
+                        <div class="kicker">Nike</div>
+                        <div class="product-card__name line-clamp-2">Air Max 90 “Infrared”</div>
+                        <div class="rating">
+                            <span class="rating__stars" style="--rating:4.6"></span>
+                            <span class="rating__value">4.6</span>
+                            <span class="rating__count">(1,284)</span>
+                        </div>
+                        <div class="product-card__footer">
+                            <span class="price price--md price--primary"><span
+                                    class="price__prefix">from</span>$149</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <a href="product.html" class="product-card__media">
+                        <img class="product-card__img" src="https://placehold.co/600x600/png" alt="Sneaker">
+                        <div class="product-card__actions">
+                            <button class="icon-btn icon-btn--danger" type="button">♥</button>
+                        </div>
+                        <div class="product-card__badge badge">🛍 <span>8 offers</span></div>
+                    </a>
+                    <div class="product-card__body">
+                        <div class="kicker">Adidas</div>
+                        <div class="product-card__name line-clamp-2">Ultraboost 1.0</div>
+                        <div class="rating">
+                            <span class="rating__stars" style="--rating:4.3"></span>
+                            <span class="rating__value">4.3</span>
+                            <span class="rating__count">(642)</span>
+                        </div>
+                        <div class="product-card__footer">
+                            <span class="price price--md price--primary"><span
+                                    class="price__prefix">from</span>$169</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div style="height:60px;"></div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__bottom">© 2025 SneakerCompare.</div>
+        </div>
+    </footer>
+</body>
+
+</html>

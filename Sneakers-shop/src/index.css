@@ -1,0 +1,49 @@
+:root {
+  --background: 0 0% 99%;
+  --foreground: 220 20% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 20% 10%;
+  --primary: 16 85% 55%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 220 14% 96%;
+  --secondary-foreground: 220 20% 10%;
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 10% 46%;
+  --border: 220 14% 90%;
+  --ring: 16 85% 55%;
+  --success: 142 76% 36%;
+  --warning: 38 92% 50%;
+  --destructive: 0 84% 60%;
+  --radius: 14px;
+  --shadow-sm: 0 1px 2px 0 hsl(220 20% 10% / 0.03);
+  --shadow-md: 0 4px 6px -1px hsl(220 20% 10% / 0.05), 0 2px 4px -2px hsl(220 20% 10% / 0.05);
+  --shadow-lg: 0 10px 15px -3px hsl(220 20% 10% / 0.08), 0 4px 6px -4px hsl(220 20% 10% / 0.05);
+  --shadow-xl: 0 20px 25px -5px hsl(220 20% 10% / 0.08), 0 8px 10px -6px hsl(220 20% 10% / 0.05);
+}
+
+.theme-dark {
+  --background: 220 20% 6%;
+  --foreground: 210 40% 98%;
+  --card: 220 20% 8%;
+  --card-foreground: 210 40% 98%;
+  --secondary: 220 20% 15%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 220 20% 15%;
+  --muted-foreground: 220 10% 60%;
+  --border: 220 20% 18%;
+}
+
+* {
+  scrollbar-width: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  margin: 0;
+}

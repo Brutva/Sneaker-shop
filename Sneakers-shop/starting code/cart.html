@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SneakerCompare — Cart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css" />
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container header__inner">
+            <a class="logo" href="index.html">
+                <span class="logo__mark">S</span>
+                <span class="logo__text">SneakerCompare</span>
+            </a>
+
+            <nav class="nav nav--desktop">
+                <a href="index.html">Home</a>
+                <a href="search.html">Browse</a>
+                <a href="stores.html">Stores</a>
+                <a href="cart.html" aria-current="page">Cart</a>
+            </nav>
+
+            <div class="header__actions">
+                <a class="btn btn--ghost btn--icon" href="favorites.html" aria-label="Favorites">♥</a>
+                <a class="btn btn--ghost btn--icon" href="cart.html" aria-label="Cart">🛒</a>
+                <button class="btn btn--ghost btn--icon" type="button" aria-label="Menu">☰</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="page">
+        <div class="container">
+            <div class="cart-head">
+                <div>
+                    <h1 class="page__title">Your Cart</h1>
+                    <p class="page__sub">2 items</p>
+                </div>
+                <a class="btn btn--outline" href="search.html">← Continue shopping</a>
+            </div>
+
+            <div class="cart-layout">
+                <!-- LEFT: items -->
+                <section class="cart-items">
+                    <div class="card cart-panel">
+                        <div class="cart-panel__head">
+                            <h2 class="cart-panel__title">Items</h2>
+                            <button class="btn btn--ghost" type="button">Clear cart</button>
+                        </div>
+
+                        <div class="cart-list">
+                            <!-- Item 1 -->
+                            <article class="cart-item">
+                                <div class="cart-item__img">
+                                    <img src="https://placehold.co/200x200/png" alt="Nike Air Max 90 Infrared">
+                                </div>
+
+                                <div class="cart-item__body">
+                                    <div class="cart-item__top">
+                                        <div style="min-width:0;">
+                                            <div class="kicker">Nike</div>
+                                            <div class="cart-item__name line-clamp-2">Air Max 90 “Infrared”</div>
+                                            <div class="muted" style="font-size:13px; font-weight:700; margin-top:6px;">
+                                                SKU: AM90-IR-2025
+                                            </div>
+                                        </div>
+
+                                        <div class="cart-item__price">
+                                            <div class="price price--md price--primary">$149</div>
+                                            <div class="muted" style="font-size:12px;">Best store offer</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="cart-item__controls">
+                                        <div class="cart-meta">
+                                            <label class="cart-meta__field">
+                                                <span class="cart-meta__label">Size (EU)</span>
+                                                <select class="select select--sm">
+                                                    <option>41</option>
+                                                    <option selected>42</option>
+                                                    <option>43</option>
+                                                    <option>44</option>
+                                                </select>
+                                            </label>
+
+                                            <label class="cart-meta__field">
+                                                <span class="cart-meta__label">Quantity</span>
+                                                <div class="qty">
+                                                    <button class="qty__btn" type="button"
+                                                        aria-label="Decrease">−</button>
+                                                    <input class="qty__input" type="text" value="1"
+                                                        inputmode="numeric" />
+                                                    <button class="qty__btn" type="button"
+                                                        aria-label="Increase">+</button>
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <div class="cart-actions">
+                                            <button class="btn btn--ghost btn--icon" type="button"
+                                                title="Move to favorites">♥</button>
+                                            <button class="btn btn--ghost btn--icon" type="button"
+                                                title="Remove">🗑</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="cart-item__bottom">
+                                        <span class="badge">🚚 Free delivery</span>
+                                        <span class="badge">⏱ 2–5 days</span>
+                                        <span class="badge">↩ 14-day returns</span>
+
+                                        <div class="cart-item__subtotal">
+                                            <span class="muted" style="font-weight:800;">Item total</span>
+                                            <span class="price price--md">$149</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <hr class="hr" />
+
+                            <!-- Item 2 -->
+                            <article class="cart-item">
+                                <div class="cart-item__img">
+                                    <img src="https://placehold.co/200x200/png" alt="adidas Ultraboost 1.0">
+                                </div>
+
+                                <div class="cart-item__body">
+                                    <div class="cart-item__top">
+                                        <div style="min-width:0;">
+                                            <div class="kicker">Adidas</div>
+                                            <div class="cart-item__name line-clamp-2">Ultraboost 1.0</div>
+                                            <div class="muted" style="font-size:13px; font-weight:700; margin-top:6px;">
+                                                SKU: HQ4203
+                                            </div>
+                                        </div>
+
+                                        <div class="cart-item__price">
+                                            <div class="price price--md price--primary">$169</div>
+                                            <div class="muted" style="font-size:12px;">Best store offer</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="cart-item__controls">
+                                        <div class="cart-meta">
+                                            <label class="cart-meta__field">
+                                                <span class="cart-meta__label">Size (EU)</span>
+                                                <select class="select select--sm">
+                                                    <option>41</option>
+                                                    <option>42</option>
+                                                    <option selected>43</option>
+                                                    <option>44</option>
+                                                </select>
+                                            </label>
+
+                                            <label class="cart-meta__field">
+                                                <span class="cart-meta__label">Quantity</span>
+                                                <div class="qty">
+                                                    <button class="qty__btn" type="button"
+                                                        aria-label="Decrease">−</button>
+                                                    <input class="qty__input" type="text" value="1"
+                                                        inputmode="numeric" />
+                                                    <button class="qty__btn" type="button"
+                                                        aria-label="Increase">+</button>
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <div class="cart-actions">
+                                            <button class="btn btn--ghost btn--icon" type="button"
+                                                title="Move to favorites">♥</button>
+                                            <button class="btn btn--ghost btn--icon" type="button"
+                                                title="Remove">🗑</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="cart-item__bottom">
+                                        <span class="badge">🚚 +$9 shipping</span>
+                                        <span class="badge">⏱ 5–7 days</span>
+
+                                        <div class="cart-item__subtotal">
+                                            <span class="muted" style="font-weight:800;">Item total</span>
+                                            <span class="price price--md">$169</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+
+                    <!-- You may like -->
+                    <section style="margin-top:18px;">
+                        <div class="section__head">
+                            <div>
+                                <h2 class="section__title" style="font-size:22px;">You may also like</h2>
+                                <p class="section__desc">Trending sneakers from similar brands</p>
+                            </div>
+                            <a class="btn btn--ghost" href="search.html"
+                                style="color:hsl(var(--primary)); font-weight:900;">Browse →</a>
+                        </div>
+
+                        <div class="products-grid" style="grid-template-columns: repeat(2, 1fr);">
+                            <article class="product-card">
+                                <a href="product.html" class="product-card__media">
+                                    <img class="product-card__img" src="https://placehold.co/600x600/png"
+                                        alt="New Balance 990v6">
+                                    <div class="product-card__badge badge">🛍 <span>5 offers</span></div>
+                                </a>
+                                <div class="product-card__body">
+                                    <div class="kicker">New Balance</div>
+                                    <div class="product-card__name line-clamp-2">990v6 Made in USA</div>
+                                    <div class="product-card__footer">
+                                        <span class="price price--md price--primary"><span
+                                                class="price__prefix">from</span>$219</span>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <article class="product-card">
+                                <a href="product.html" class="product-card__media">
+                                    <img class="product-card__img" src="https://placehold.co/600x600/png"
+                                        alt="Air Jordan 1">
+                                    <div class="product-card__badge badge">🛍 <span>9 offers</span></div>
+                                </a>
+                                <div class="product-card__body">
+                                    <div class="kicker">Jordan</div>
+                                    <div class="product-card__name line-clamp-2">Air Jordan 1 Retro High OG</div>
+                                    <div class="product-card__footer">
+                                        <span class="price price--md price--primary"><span
+                                                class="price__prefix">from</span>$199</span>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </section>
+                </section>
+
+                <!-- RIGHT: summary -->
+                <aside class="cart-summary">
+                    <div class="card cart-panel">
+                        <div class="cart-panel__head">
+                            <h2 class="cart-panel__title">Order Summary</h2>
+                        </div>
+
+                        <div class="summary">
+                            <div class="summary-row">
+                                <span class="muted">Subtotal</span>
+                                <span style="font-weight:900;">$318</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="muted">Shipping</span>
+                                <span style="font-weight:900;">$9</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="muted">Tax</span>
+                                <span style="font-weight:900;">$0</span>
+                            </div>
+
+                            <hr class="hr" style="margin:12px 0;" />
+
+                            <div class="summary-row summary-total">
+                                <span>Total</span>
+                                <span class="price price--lg price--primary">$327</span>
+                            </div>
+
+                            <div class="promo">
+                                <label class="promo__label" for="promo">Promo code</label>
+                                <div class="promo__row">
+                                    <input id="promo" class="input" type="text" placeholder="Enter code" />
+                                    <button class="btn btn--outline" type="button">Apply</button>
+                                </div>
+                            </div>
+
+                            <div class="shipping">
+                                <div class="shipping__title">Estimated delivery</div>
+                                <p class="muted" style="line-height:1.55;">
+                                    Between <b>2</b> and <b>7</b> days depending on store and shipping option.
+                                </p>
+                            </div>
+
+                            <button class="btn btn--primary btn--lg" type="button" style="width:100%;">Checkout
+                                →</button>
+                            <button class="btn btn--outline btn--lg" type="button" style="width:100%;">Savee payment
+                                methods</button>
+
+                            <div class="secure">
+                                <span class="badge">🔒 Secure checkout</span>
+                                <span class="badge">💳 Cards & wallets</span>
+                                <span class="badge">↩ Easy returns</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card cart-panel" style="margin-top:14px;">
+                        <div class="cart-panel__head">
+                            <h2 class="cart-panel__title">Need help?</h2>
+                        </div>
+                        <div style="padding: 0 16px 16px;">
+                            <p class="muted" style="line-height:1.6;">
+                                Questions about delivery, returns, or store ratings? We’ll help you compare offers and
+                                choose the best store.
+                            </p>
+                            <div style="display:flex; gap:10px; margin-top:12px;">
+                                <button class="btn btn--outline" type="button">Support</button>
+                                <button class="btn btn--ghost" type="button"
+                                    style="color:hsl(var(--primary)); font-weight:900;">FAQ →</button>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- Empty state (оставил как блок; позже ты можешь показывать по логике) -->
+            <!--
+    <section class="cart-empty card" style="margin-top:18px;">
+      <div style="padding:26px; text-align:center;">
+        <h2 style="font-weight:900; margin-bottom:10px;">Your cart is empty</h2>
+        <p class="muted" style="margin-bottom:16px;">Find sneakers and add them to your cart to compare store offers.</p>
+        <a class="btn btn--primary btn--lg" href="search.html">Browse sneakers</a>
+      </div>
+    </section>
+    -->
+            <div style="height: 60px;"></div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__bottom">© 2025 SneakerCompare. All rights reserved.</div>
+        </div>
+    </footer>
+</body>
+
+</html>
