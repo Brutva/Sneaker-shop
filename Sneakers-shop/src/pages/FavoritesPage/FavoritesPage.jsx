@@ -2,17 +2,19 @@ import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import '../../normalize/adaptive.css';
 import './FavoritesPage.css'
+import { ProductsGrid } from "../HomePage/ProductsGrid";
 
-export function FavoritesPage() {
+export function FavoritesPage({cart, products}) {
     return (
         <div>
-            <Header />
+            <Header cart={cart}/>
             <main className="page">
                 <div className="container">
                     <h1 className="page__title">My Favorites</h1>
                     <p className="page__sub">2 saved sneakers</p>
 
                     <div className="grid-products" style={{marginTop: "18px"}}>
+                        {}
                         <article className="product-card">
                             <a href="product.html" className="product-card__media">
                                 <img className="product-card__img" src="src/public/images/Nike-Air-Max-90-Infrared-2020.jpg" alt="Sneaker"/>

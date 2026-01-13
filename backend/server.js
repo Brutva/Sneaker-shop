@@ -18,31 +18,30 @@ import { defaultDeliveryOptions } from './defaultData/defaultDeliveryOptions.js'
 import { defaultCart } from './defaultData/defaultCart.js';
 import { defaultOrders } from './defaultData/defaultOrders.js';
 import fs from 'fs';
+import favoritesRoutes from './routes/favorites.js';
+import { Favorite } from './models/Favorite.js';
+import { defaultFavorites } from './defaultData/defaultFavorites.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Serve images from the images folder
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-// Use routes
 app.use('/api/products', productRoutes);
 app.use('/api/delivery-options', deliveryOptionRoutes);
 app.use('/api/cart-items', cartItemRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reset', resetRoutes);
 app.use('/api/payment-summary', paymentSummaryRoutes);
+app.use('/api/favorites', favoritesRoutes);
 
-// Serve static files from the dist folder
 app.use(express.static(path.join(__dirname, 'dist')));
 
-// Catch-all route to serve index.html for any unmatched routes
 app.get('*', (req, res) => {
   const indexPath = path.join(__dirname, 'dist', 'index.html');
   if (fs.existsSync(indexPath)) {
@@ -58,10 +57,7 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Something went wrong!' });
 });
-/* eslint-enable no-unused-vars */
 
-// Sync database and load default data if none exist.
-// `alter: true` helps when you change models (e.g. adding brand/offers).
 await sequelize.sync({ alter: true });
 
 const productCount = await Product.count();
@@ -92,15 +88,24 @@ if (productCount === 0) {
     updatedAt: new Date(timestamp + index)
   }));
 
+  const favoritesWithTimestamps = defaultFavorites.map((fav, index) => ({
+    ...fav,
+    createdAt: new Date(timestamp + index),
+    updatedAt: new Date(timestamp + index)
+  }));
+
   await Product.bulkCreate(productsWithTimestamps);
   await DeliveryOption.bulkCreate(deliveryOptionsWithTimestamps);
   await CartItem.bulkCreate(cartItemsWithTimestamps);
   await Order.bulkCreate(ordersWithTimestamps);
+  if (favoritesWithTimestamps.length > 0) {
+    await Favorite.bulkCreate(favoritesWithTimestamps);
+  }
+
 
   console.log('Default data added to the database.');
 }
 
-// Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
