@@ -94,17 +94,33 @@ if (productCount === 0) {
     updatedAt: new Date(timestamp + index)
   }));
 
+
   await Product.bulkCreate(productsWithTimestamps);
   await DeliveryOption.bulkCreate(deliveryOptionsWithTimestamps);
   await CartItem.bulkCreate(cartItemsWithTimestamps);
   await Order.bulkCreate(ordersWithTimestamps);
-  if (favoritesWithTimestamps.length > 0) {
-    await Favorite.bulkCreate(favoritesWithTimestamps);
-  }
-
+  await Favorite.bulkCreate(favoritesWithTimestamps);
 
   console.log('Default data added to the database.');
 }
+
+const favoriteCount = await Favorite.count();
+
+if (favoriteCount === 0) {
+  const timestamp = Date.now();
+
+  const favoritesWithTimestamps = defaultFavorites.map((fav, index) => ({
+    ...fav,
+    createdAt: new Date(timestamp + index),
+    updatedAt: new Date(timestamp + index)
+  }));
+
+  if (favoritesWithTimestamps.length > 0) {
+    await Favorite.bulkCreate(favoritesWithTimestamps);
+    console.log('Default favorites added to the database.');
+  }
+}
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

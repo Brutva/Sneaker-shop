@@ -6,19 +6,10 @@ export const Favorite = sequelize.define('Favorite', {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
-    references: {
-      model: 'Products',
-      key: 'id'
-    }
+    references: { model: 'Products', key: 'id' }
   },
-  createdAt: {
-    type: DataTypes.DATE(3)
-  },
-  updatedAt: {
-    type: DataTypes.DATE(3)
-  },
+  createdAt: { type: DataTypes.DATE(3) },
+  updatedAt: { type: DataTypes.DATE(3) },
 }, {
-  defaultScope: {
-    order: [['createdAt', 'ASC']]
-  }
+  defaultScope: { order: [['createdAt', 'ASC']] }
 });

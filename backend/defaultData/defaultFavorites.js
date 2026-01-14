@@ -1,1 +1,8 @@
-export const defaultFavorites = [];
+export const defaultFavorites = [
+  {
+    productId: "00000000-0000-0000-000000000001"
+  },
+  {
+    productId: "00000000-0000-0000-000000000002"
+  }
+];

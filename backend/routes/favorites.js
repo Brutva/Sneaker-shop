@@ -1,20 +1,49 @@
 import express from 'express';
+import { Op } from 'sequelize';
 import { Favorite } from '../models/Favorite.js';
 import { Product } from '../models/Product.js';
 
 const router = express.Router();
 
+function normalizeImageUrl(req, image) {
+  if (!image || typeof image !== 'string') return image;
+  if (image.startsWith('http://') || image.startsWith('https://')) return image;
+
+  const baseUrl = `${req.protocol}://${req.get('host')}`;
+  let imgPath = image.replace(/\\/g, '/');
+
+  if (imgPath.includes('src/public/images/')) {
+    const filename = imgPath.split('/').pop();
+    imgPath = `images/products/${filename}`;
+  }
+
+  if (imgPath.startsWith('/')) imgPath = imgPath.slice(1);
+  return `${baseUrl}/${imgPath}`;
+}
+
+// GET /api/favorites
+// GET /api/favorites?expand=product  -> вернёт favorites + объект product
 router.get('/', async (req, res) => {
   const expand = req.query.expand;
-  let favorites = await Favorite.findAll();
+  const favorites = await Favorite.findAll();
 
   if (expand === 'product') {
-    favorites = await Promise.all(favorites.map(async (fav) => {
-      const product = await Product.findByPk(fav.productId);
-      return {
-        ...fav.toJSON(),
-        product
-      };
+    const ids = favorites.map(f => f.productId);
+    if (ids.length === 0) return res.json([]);
+
+    const products = await Product.findAll({
+      where: { id: { [Op.in]: ids } }
+    });
+
+    const productById = new Map(products.map(p => {
+      const data = p.get({ plain: true });
+      data.image = normalizeImageUrl(req, data.image);
+      return [data.id, data];
+    }));
+
+    return res.json(favorites.map(f => {
+      const fav = f.get({ plain: true });
+      return { ...fav, product: productById.get(fav.productId) || null };
     }));
   }
 
@@ -23,20 +52,13 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   const { productId } = req.body;
-
-  if (!productId) {
-    return res.status(400).json({ error: 'productId is required' });
-  }
+  if (!productId) return res.status(400).json({ error: 'productId is required' });
 
   const product = await Product.findByPk(productId);
-  if (!product) {
-    return res.status(400).json({ error: 'Product not found' });
-  }
+  if (!product) return res.status(400).json({ error: 'Product not found' });
 
   const existing = await Favorite.findOne({ where: { productId } });
-  if (existing) {
-    return res.status(200).json(existing);
-  }
+  if (existing) return res.status(200).json(existing);
 
   const favorite = await Favorite.create({ productId });
   res.status(201).json(favorite);
@@ -44,11 +66,8 @@ router.post('/', async (req, res) => {
 
 router.delete('/:productId', async (req, res) => {
   const { productId } = req.params;
-
   const favorite = await Favorite.findOne({ where: { productId } });
-  if (!favorite) {
-    return res.status(404).json({ error: 'Favorite not found' });
-  }
+  if (!favorite) return res.status(404).json({ error: 'Favorite not found' });
 
   await favorite.destroy();
   res.status(204).send();

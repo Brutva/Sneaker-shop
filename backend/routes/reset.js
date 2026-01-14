@@ -8,6 +8,8 @@ import { defaultProducts } from '../defaultData/defaultProducts.js';
 import { defaultDeliveryOptions } from '../defaultData/defaultDeliveryOptions.js';
 import { defaultCart } from '../defaultData/defaultCart.js';
 import { defaultOrders } from '../defaultData/defaultOrders.js';
+import { Favorite } from '../models/Favorite.js';
+import { defaultFavorites } from '../defaultData/defaultFavorites.js';
 
 const router = express.Router();
 
@@ -40,10 +42,18 @@ router.post('/', async (req, res) => {
     updatedAt: new Date(timestamp + index)
   }));
 
+  const favoritesWithTimestamps = defaultFavorites.map((fav, index) => ({
+    ...fav,
+    createdAt: new Date(timestamp + index),
+    updatedAt: new Date(timestamp + index)
+  }));
+
+
   await Product.bulkCreate(productsWithTimestamps);
   await DeliveryOption.bulkCreate(deliveryOptionsWithTimestamps);
   await CartItem.bulkCreate(cartItemsWithTimestamps);
   await Order.bulkCreate(ordersWithTimestamps);
+  await Favorite.bulkCreate(favoritesWithTimestamps);
 
   res.status(204).send();
 });
