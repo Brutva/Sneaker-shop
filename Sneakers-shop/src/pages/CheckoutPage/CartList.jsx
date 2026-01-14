@@ -9,7 +9,7 @@ export function CartList({cart, deliveryOptions}) {
           <div key={cartItem.productId} >
             <article className="cart-item">
               <div className="cart-item__img">
-                <img src={cartItem.product.image} alt="Nike Air Max 90 Infrared" />
+                <img src={cartItem.product.image} />
               </div>
 
               <div className="cart-item__body">

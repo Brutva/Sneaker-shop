@@ -2,7 +2,6 @@ import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
 import './CheckoutPage.css';
 import '../../normalize/adaptive.css'
-import { formatMoney } from "../../utils/money";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { CartList } from "./CartList";
