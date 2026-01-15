@@ -1,11 +1,12 @@
-import { Routes, Route } from 'react-router'
-import './App.css'
-import { HomePage } from './pages/HomePage/HomePage'
-import { CheckoutPage } from './pages/CheckoutPage/CheckoutPage'
-import { FavoritesPage } from './pages/FavoritesPage/FavoritesPage'
-import { CatalogPage } from './pages/CatalogPage/CatalogPage'
-import { StoresPage } from './pages/StoresPage/StoresPage'
+import { Routes, Route } from 'react-router';
+import './App.css';
+import { HomePage } from './pages/HomePage/HomePage';
+import { CheckoutPage } from './pages/CheckoutPage/CheckoutPage';
+import { FavoritesPage } from './pages/FavoritesPage/FavoritesPage';
+import { CatalogPage } from './pages/CatalogPage/CatalogPage';
+import { StoresPage } from './pages/StoresPage/StoresPage';
 import { useEffect, useState } from "react";
+import { ProductPage } from './pages/ProductPage/ProductPage';
 import axios from "axios";
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
       <Route path='/favorites' element={<FavoritesPage cart={cart} />} />
       <Route path='/catalog' element={<CatalogPage cart={cart} />} />
       <Route path='/stores' element={<StoresPage cart={cart} />} />
+      <Route path="/product/:productId" element={<ProductPage cart={cart} />} />
     </Routes>
   )
 }

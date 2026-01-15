@@ -1,0 +1,272 @@
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.breadcrumbs__link {
+  text-decoration: none;
+  font-weight: 800;
+  color: hsl(var(--muted-foreground));
+}
+
+.breadcrumbs__link:hover {
+  color: hsl(var(--foreground));
+}
+
+.breadcrumbs__sep {
+  color: hsl(var(--muted-foreground));
+}
+
+.breadcrumbs__current {
+  font-weight: 900;
+}
+
+.product-top {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 22px;
+  margin-top: 16px;
+}
+
+.product-gallery {
+  padding: 14px;
+}
+
+.product-gallery__main {
+  position: relative;
+  border-radius: calc(var(--radius) + 2px);
+  overflow: hidden;
+  background: hsl(var(--secondary) / 0.6);
+  aspect-ratio: 1 / 1;
+}
+
+.product-gallery__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.product-gallery__badge {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+}
+
+.product-gallery__thumbs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.thumb {
+  border: 1px solid hsl(var(--border));
+  border-radius: 12px;
+  background: hsl(var(--card));
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  aspect-ratio: 1 / 1;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.thumb.is-active {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 0 0 4px hsl(var(--primary) / 0.12);
+}
+
+.product-summary {
+  padding: 16px;
+}
+
+.product-title {
+  margin: 6px 0 10px;
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.product-rating {
+  margin-bottom: 14px;
+}
+
+.product-price {
+  padding: 12px 0 14px;
+  border-top: 1px solid hsl(var(--border) / 0.6);
+  border-bottom: 1px solid hsl(var(--border) / 0.6);
+  margin-bottom: 14px;
+}
+
+.product-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.product-meta {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.meta-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 10px;
+  border-top: 1px solid hsl(var(--border) / 0.6);
+}
+
+.meta-row:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.meta-label {
+  color: hsl(var(--muted-foreground));
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.meta-value {
+  font-weight: 900;
+  text-align: right;
+}
+
+.product-sizes__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.product-sizes__title {
+  font-weight: 900;
+}
+
+.sizes-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.size-btn {
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--secondary));
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.size-btn:hover {
+  filter: brightness(0.98);
+}
+
+.offers-card {
+  padding: 16px;
+  margin-top: 22px;
+}
+
+.offers-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.offers-title {
+  font-size: 20px;
+  font-weight: 900;
+  margin: 0;
+}
+
+.offers-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.offers-table {
+  border-top: 1px solid hsl(var(--border) / 0.6);
+}
+
+.offers-row {
+  display: grid;
+  grid-template-columns: 1.4fr 0.9fr 0.9fr 0.8fr 0.6fr;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid hsl(var(--border) / 0.6);
+  align-items: center;
+}
+
+.offers-row--head {
+  font-weight: 900;
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+}
+
+.offers-cell--right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.store {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.store__logo {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: hsl(var(--primary) / 0.12);
+  color: hsl(var(--primary));
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+}
+
+.store__name {
+  font-weight: 900;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: hsl(var(--secondary));
+  border: 1px solid hsl(var(--border) / 0.6);
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.about-card {
+  padding: 16px;
+  margin-top: 18px;
+}
+
+.about-title {
+  margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.about-text {
+  margin: 0;
+  line-height: 1.6;
+}

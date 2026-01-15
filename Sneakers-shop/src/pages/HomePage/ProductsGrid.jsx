@@ -8,7 +8,7 @@ export function ProductsGrid({ products }) {
         return (
           <div className="containerProducts" key={product.id}>
             <article className="product-card">
-              <a href="product.html" className="product-card__media">
+              <a href={`/product/${product.id}`} className="product-card__media">
                 <img className="product-card__img" src={product.image} alt="Sneaker image" />
                 <div className="product-card__badge badge">
                   <span>{product.offers} offers</span>
@@ -20,7 +20,10 @@ export function ProductsGrid({ products }) {
                     <div className="kicker">{product.brand}</div>
                     <div className="product-card__name line-clamp-2">{product.name}</div>
                     <div className="rating">
-                      <span className="rating__stars" style={{ "--rating": product.rating.stars }}></span>
+                      <span 
+                        className="rating__stars" 
+                        style={{ "--rating": product.rating.stars }}>
+                      </span>
                       <span className="rating__value">{product.rating.stars}</span>
                       <span className="rating__count">({product.rating.count})</span>
                     </div>
