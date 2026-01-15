@@ -8,6 +8,7 @@
     margin: 0 30px; 
 }
 
+
 .hero::before {
     content: "";
     position: absolute;
@@ -278,7 +279,6 @@
     border-top: 1px solid hsl(var(--border) / .6);
 }
 
-/* CTA */
 .cta {
     padding: 60px 0;
     background: hsl(var(--primary));
@@ -387,4 +387,16 @@
 
 .rating__count {
     color: hsl(var(--muted-foreground));
+}
+
+.favoriteBtn {
+    margin-bottom: 5px;
+}
+
+.productInfBtns {
+    display: flex;
+}
+
+.btns {
+    margin-left: auto;
 }
