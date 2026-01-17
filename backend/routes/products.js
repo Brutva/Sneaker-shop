@@ -1,65 +1,147 @@
 import express from 'express';
+import { Op } from 'sequelize';
 import { Product } from '../models/Product.js';
+import { Offer } from '../models/Offer.js';
+import { Store } from '../models/Store.js';
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-  const search = req.query.search;
-
-  let products;
-  if (search) {
-    products = await Product.findAll();
-
-    // Filter products by case-insensitive search on name or keywords
-    const lowerCaseSearch = search.toLowerCase();
-
-    products = products.filter(product => {
-      const nameMatch = product.name.toLowerCase().includes(lowerCaseSearch);
-
-      const brandMatch = product.brand
-        ? product.brand.toLowerCase().includes(lowerCaseSearch)
-        : false;
-
-      const keywordsMatch = product.keywords.some(keyword => keyword.toLowerCase().includes(lowerCaseSearch));
-
-      return nameMatch || brandMatch || keywordsMatch;
-    });
-
-  } else {
-    products = await Product.findAll();
-  }
+function normalizeImageUrl(req, image) {
+  if (!image || typeof image !== 'string') return image;
+  if (image.startsWith('http://') || image.startsWith('https://')) return image;
 
   const baseUrl = `${req.protocol}://${req.get('host')}`;
+  let imgPath = image.replace(/\\/g, "/");
 
-  const normalizeImageUrl = (image) => {
-    if (!image || typeof image !== 'string') return image;
+  if (imgPath.includes('src/public/images/')) {
+    const filename = imgPath.split('/').pop();
+    imgPath = `images/products/${filename}`;
+  }
 
-    // If it's already an absolute URL, keep it as-is.
-    if (image.startsWith('http://') || image.startsWith('https://')) return image;
+  if (imgPath.startsWith('/')) imgPath = imgPath.slice(1);
+  return `${baseUrl}/${imgPath}`;
+}
 
-    // Convert Windows backslashes to forward slashes
-    let imgPath = image.replace(/\\/g, '/');
+function normalizeProductImages(req, productPlain) {
+  productPlain.image = normalizeImageUrl(req, productPlain.image);
 
-    // If old frontend-style path was stored, map it to backend static images
-    // e.g. "src/public/images/NAME.jpg" -> "images/products/NAME.jpg"
-    if (imgPath.includes('src/public/images/')) {
-      const filename = imgPath.split('/').pop();
-      imgPath = `images/products/${filename}`;
+  let imgs = productPlain.images;
+  if (!Array.isArray(imgs) || imgs.length === 0) {
+    imgs = [productPlain.image, productPlain.image, productPlain.image, productPlain.image];
+  }
+
+  const normalized = imgs.map((img) => normalizeImageUrl(req, img));
+  while (normalized.length < 4) normalized.push(normalized[normalized.length - 1]);
+
+  productPlain.images = normalized.slice(0, 4);
+  return productPlain;
+}
+
+function parseExpand(expand) {
+  if (!expand) return new Set();
+  if (expand === 'all') return new Set(['images', 'offers', 'stores']);
+  return new Set(String(expand).split(',').map(s => s.trim()).filter(Boolean));
+}
+
+function deliveryLabel(offer) {
+  const min = offer.deliveryMinDays;
+  const max = offer.deliveryMaxDays;
+  if (Number.isFinite(min) && Number.isFinite(max)) return `${min}-${max} days`;
+  if (Number.isFinite(min) && !Number.isFinite(max)) return `${min}+ days`;
+  return null;
+}
+
+async function attachOffers(req, productsPlain, expandSet) {
+  if (!expandSet.has('offers') && !expandSet.has('stores')) return productsPlain;
+
+  const productIds = productsPlain.map(p => p.id);
+  if (productIds.length === 0) return productsPlain;
+
+  const offers = await Offer.findAll({ where: { productId: { [Op.in]: productIds } } });
+  const offersPlain = offers.map(o => o.get({ plain: true }));
+
+  const storeIds = [...new Set(offersPlain.map(o => o.storeId))];
+  const stores = storeIds.length
+    ? await Store.findAll({ where: { id: { [Op.in]: storeIds } } })
+    : [];
+
+  const storeById = new Map(stores.map(s => {
+    const d = s.get({ plain: true });
+    d.logo = normalizeImageUrl(req, d.logo);
+    return [d.id, d];
+  }));
+
+  const offersByProductId = new Map();
+  for (const o of offersPlain) {
+    if (!offersByProductId.has(o.productId)) offersByProductId.set(o.productId, []);
+
+    const offerDto = { ...o, delivery: deliveryLabel(o) };
+
+    if (expandSet.has('stores')) {
+      offerDto.store = storeById.get(o.storeId) || null;
     }
 
-    // Ensure no leading slash so `${baseUrl}/${imgPath}` is correct
-    if (imgPath.startsWith('/')) imgPath = imgPath.slice(1);
+    offersByProductId.get(o.productId).push(offerDto);
+  }
 
-    return `${baseUrl}/${imgPath}`;
-  };
+  return productsPlain.map(p => {
+    const list = offersByProductId.get(p.id) || [];
+    if (list.length > 0) p.offers = list.length;
+    p.offersList = list;
+    return p;
+  });
+}
 
-  const normalizedProducts = products.map((product) => {
+router.get('/', async (req, res) => {
+  const search = req.query.search;
+  const expandSet = parseExpand(req.query.expand);
+
+  let products = await Product.findAll();
+
+  if (search) {
+    const lowerCaseSearch = String(search).toLowerCase();
+    products = products.filter(product => {
+      const nameMatch = product.name.toLowerCase().includes(lowerCaseSearch);
+      const brandMatch = product.brand ? product.brand.toLowerCase().includes(lowerCaseSearch) : false;
+      const keywordsMatch = product.keywords.some(keyword => keyword.toLowerCase().includes(lowerCaseSearch));
+      return nameMatch || brandMatch || keywordsMatch;
+    });
+  }
+
+  let normalizedProducts = products.map((product) => {
     const data = product.get({ plain: true });
-    data.image = normalizeImageUrl(data.image);
-    return data;
+    return normalizeProductImages(req, data);
   });
 
+  if (expandSet.has('offers') || expandSet.has('stores')) {
+    normalizedProducts = await attachOffers(req, normalizedProducts, expandSet);
+  }
+
+  if (!expandSet.has('images') && !expandSet.has('all')) {
+    normalizedProducts = normalizedProducts.map(p => {
+      const rest = { ...p };
+      delete rest.images;
+      return rest;
+    });
+
+  }
+
   res.json(normalizedProducts);
+});
+
+router.get('/:id', async (req, res) => {
+  const expandSet = parseExpand(req.query.expand);
+  const product = await Product.findByPk(req.params.id);
+  if (!product) return res.status(404).json({ error: 'Product not found' });
+
+  let data = normalizeProductImages(req, product.get({ plain: true }));
+
+  if (expandSet.has('offers') || expandSet.has('stores')) {
+    const enrichedList = await attachOffers(req, [data], expandSet);
+    data = enrichedList[0];
+  }
+
+  res.json(data);
 });
 
 export default router;

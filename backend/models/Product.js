@@ -3,8 +3,6 @@ import { sequelize } from './index.js';
 
 export const Product = sequelize.define('Product', {
   id: {
-    // Use STRING instead of UUID so the backend can work with any
-    // ID format (including custom IDs from the frontend).
     type: DataTypes.STRING,
     primaryKey: true,
     allowNull: false
@@ -13,10 +11,17 @@ export const Product = sequelize.define('Product', {
     type: DataTypes.STRING,
     allowNull: false
   },
+
   image: {
     type: DataTypes.STRING,
     allowNull: false
   },
+
+  images: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
+
   name: {
     type: DataTypes.STRING,
     allowNull: false
@@ -33,6 +38,28 @@ export const Product = sequelize.define('Product', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
+
+  category: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  colorway: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  releaseDate: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  sizes: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+
   keywords: {
     type: DataTypes.STRING,
     allowNull: false,

@@ -21,7 +21,6 @@ export function HomePage({ cart }) {
         getHomeData()
     }, []);
 
-
     return (
         <div>
             <Header cart={cart} />

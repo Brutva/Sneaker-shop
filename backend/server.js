@@ -2,24 +2,33 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs';
+
 import { sequelize } from './models/index.js';
+
 import productRoutes from './routes/products.js';
+import storesRoutes from './routes/stores.js';
 import deliveryOptionRoutes from './routes/deliveryOptions.js';
 import cartItemRoutes from './routes/cartItems.js';
 import orderRoutes from './routes/orders.js';
 import resetRoutes from './routes/reset.js';
 import paymentSummaryRoutes from './routes/paymentSummary.js';
+import favoritesRoutes from './routes/favorites.js';
+
 import { Product } from './models/Product.js';
+import { Store } from './models/Store.js';
+import { Offer } from './models/Offer.js';
 import { DeliveryOption } from './models/DeliveryOption.js';
 import { CartItem } from './models/CartItem.js';
 import { Order } from './models/Order.js';
+import { Favorite } from './models/Favorite.js';
+
 import { defaultProducts } from './defaultData/defaultProducts.js';
+import { defaultStores } from './defaultData/defaultStores.js';
+import { defaultOffers } from './defaultData/defaultOffers.js';
 import { defaultDeliveryOptions } from './defaultData/defaultDeliveryOptions.js';
 import { defaultCart } from './defaultData/defaultCart.js';
 import { defaultOrders } from './defaultData/defaultOrders.js';
-import fs from 'fs';
-import favoritesRoutes from './routes/favorites.js';
-import { Favorite } from './models/Favorite.js';
 import { defaultFavorites } from './defaultData/defaultFavorites.js';
 
 const app = express();
@@ -33,6 +42,7 @@ app.use(express.json());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/products', productRoutes);
+app.use('/api/stores', storesRoutes);
 app.use('/api/delivery-options', deliveryOptionRoutes);
 app.use('/api/cart-items', cartItemRoutes);
 app.use('/api/orders', orderRoutes);
@@ -51,7 +61,6 @@ app.get('*', (req, res) => {
   }
 });
 
-// Error handling middleware
 /* eslint-disable no-unused-vars */
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -60,67 +69,33 @@ app.use((err, req, res, next) => {
 
 await sequelize.sync({ alter: true });
 
-const productCount = await Product.count();
-if (productCount === 0) {
+function addTimestamps(items) {
   const timestamp = Date.now();
-
-  const productsWithTimestamps = defaultProducts.map((product, index) => ({
-    ...product,
-    createdAt: new Date(timestamp + index),
-    updatedAt: new Date(timestamp + index)
-  }));
-
-  const deliveryOptionsWithTimestamps = defaultDeliveryOptions.map((option, index) => ({
-    ...option,
-    createdAt: new Date(timestamp + index),
-    updatedAt: new Date(timestamp + index)
-  }));
-
-  const cartItemsWithTimestamps = defaultCart.map((item, index) => ({
+  return items.map((item, index) => ({
     ...item,
     createdAt: new Date(timestamp + index),
     updatedAt: new Date(timestamp + index)
   }));
-
-  const ordersWithTimestamps = defaultOrders.map((order, index) => ({
-    ...order,
-    createdAt: new Date(timestamp + index),
-    updatedAt: new Date(timestamp + index)
-  }));
-
-  const favoritesWithTimestamps = defaultFavorites.map((fav, index) => ({
-    ...fav,
-    createdAt: new Date(timestamp + index),
-    updatedAt: new Date(timestamp + index)
-  }));
-
-
-  await Product.bulkCreate(productsWithTimestamps);
-  await DeliveryOption.bulkCreate(deliveryOptionsWithTimestamps);
-  await CartItem.bulkCreate(cartItemsWithTimestamps);
-  await Order.bulkCreate(ordersWithTimestamps);
-  await Favorite.bulkCreate(favoritesWithTimestamps);
-
-  console.log('Default data added to the database.');
 }
 
-const favoriteCount = await Favorite.count();
-
-if (favoriteCount === 0) {
-  const timestamp = Date.now();
-
-  const favoritesWithTimestamps = defaultFavorites.map((fav, index) => ({
-    ...fav,
-    createdAt: new Date(timestamp + index),
-    updatedAt: new Date(timestamp + index)
-  }));
-
-  if (favoritesWithTimestamps.length > 0) {
-    await Favorite.bulkCreate(favoritesWithTimestamps);
-    console.log('Default favorites added to the database.');
-  }
+const productCount = await Product.count();
+if (productCount === 0) {
+  await Product.bulkCreate(addTimestamps(defaultProducts));
+  await DeliveryOption.bulkCreate(addTimestamps(defaultDeliveryOptions));
+  await CartItem.bulkCreate(addTimestamps(defaultCart));
+  await Order.bulkCreate(addTimestamps(defaultOrders));
+  await Favorite.bulkCreate(addTimestamps(defaultFavorites));
 }
 
+const storeCount = await Store.count();
+if (storeCount === 0) {
+  await Store.bulkCreate(addTimestamps(defaultStores));
+}
+
+const offerCount = await Offer.count();
+if (offerCount === 0) {
+  await Offer.bulkCreate(addTimestamps(defaultOffers));
+}
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
