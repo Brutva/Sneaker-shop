@@ -43,6 +43,10 @@ export const Store = sequelize.define('Store', {
   updatedAt: {
     type: DataTypes.DATE(3)
   },
+  productsCount: {
+    type: DataTypes.INTEGER,
+    allowNull: true
+  },
 }, {
   defaultScope: {
     order: [['createdAt', 'ASC']]

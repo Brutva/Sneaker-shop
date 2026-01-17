@@ -28,8 +28,11 @@ function parseExpand(expand) {
   return new Set(String(expand).split(',').map(s => s.trim()).filter(Boolean));
 }
 
-async function getStoreStats() {
-  const offers = await Offer.findAll({ attributes: ['storeId', 'productId'] });
+async function getStoreStatsInStock() {
+  const offers = await Offer.findAll({
+    where: { inStock: true },
+    attributes: ['storeId', 'productId']
+  });
 
   const offersCountByStoreId = new Map();
   const productsByStoreId = new Map();
@@ -60,27 +63,36 @@ router.get('/', async (req, res) => {
     });
   }
 
+  const stats = await getStoreStatsInStock();
+
   const storePlain = stores.map(s => {
     const data = s.get({ plain: true });
     data.logo = normalizeImageUrl(req, data.logo);
+
+    data.catalogCount = typeof data.productsCount === 'number' ? data.productsCount : null;
+
     return data;
   });
 
-  let stats = null;
-  if (expandSet.has('stats') || expandSet.has('products')) {
-    stats = await getStoreStats();
-  }
-
   const withStats = storePlain.map(s => {
-    const offersCount = stats?.offersCountByStoreId.get(s.id) || 0;
-    const productsCount = stats?.productsByStoreId.get(s.id)?.size || 0;
-    return { ...s, offersCount, productsCount };
+    const offersCount = stats.offersCountByStoreId.get(s.id) || 0;
+    const productsCount = stats.productsByStoreId.get(s.id)?.size || 0;
+
+    return {
+      ...s,
+      offersCount,   
+      productsCount, 
+  
+    };
   });
 
   if (expandSet.has('products')) {
-    const offers = await Offer.findAll();
-    const storeToProductIds = new Map();
+    const offers = await Offer.findAll({
+      where: { inStock: true },
+      attributes: ['storeId', 'productId']
+    });
 
+    const storeToProductIds = new Map();
     for (const o of offers) {
       const { storeId, productId } = o.get({ plain: true });
       if (!storeToProductIds.has(storeId)) storeToProductIds.set(storeId, new Set());
@@ -88,6 +100,7 @@ router.get('/', async (req, res) => {
     }
 
     const allProductIds = [...new Set(offers.map(o => o.productId))];
+
     const products = allProductIds.length
       ? await Product.findAll({ where: { id: { [Op.in]: allProductIds } } })
       : [];
@@ -96,7 +109,11 @@ router.get('/', async (req, res) => {
       products.map(p => {
         const d = p.get({ plain: true });
         d.image = normalizeImageUrl(req, d.image);
-        const imgs = Array.isArray(d.images) && d.images.length ? d.images : [d.image, d.image, d.image, d.image];
+
+        const imgs = Array.isArray(d.images) && d.images.length
+          ? d.images
+          : [d.image, d.image, d.image, d.image];
+
         d.images = imgs.map(img => normalizeImageUrl(req, img)).slice(0, 4);
         return [d.id, d];
       })
@@ -122,12 +139,18 @@ router.get('/:id', async (req, res) => {
   const data = store.get({ plain: true });
   data.logo = normalizeImageUrl(req, data.logo);
 
-  const stats = await getStoreStats();
+  data.catalogCount = typeof data.productsCount === 'number' ? data.productsCount : null;
+
+  const stats = await getStoreStatsInStock();
   data.offersCount = stats.offersCountByStoreId.get(data.id) || 0;
   data.productsCount = stats.productsByStoreId.get(data.id)?.size || 0;
 
   if (expandSet.has('products') || expandSet.has('all')) {
-    const offers = await Offer.findAll({ where: { storeId: data.id } });
+    const offers = await Offer.findAll({
+      where: { storeId: data.id, inStock: true },
+      attributes: ['productId']
+    });
+
     const productIds = [...new Set(offers.map(o => o.productId))];
 
     const products = productIds.length
@@ -137,7 +160,11 @@ router.get('/:id', async (req, res) => {
     data.products = products.map(p => {
       const d = p.get({ plain: true });
       d.image = normalizeImageUrl(req, d.image);
-      const imgs = Array.isArray(d.images) && d.images.length ? d.images : [d.image, d.image, d.image, d.image];
+
+      const imgs = Array.isArray(d.images) && d.images.length
+        ? d.images
+        : [d.image, d.image, d.image, d.image];
+
       d.images = imgs.map(img => normalizeImageUrl(req, img)).slice(0, 4);
       return d;
     });
