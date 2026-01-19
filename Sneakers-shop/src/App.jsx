@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import { HomePage } from './pages/HomePage/HomePage';
 import { CheckoutPage } from './pages/CheckoutPage/CheckoutPage';
@@ -10,27 +10,27 @@ import { ProductPage } from './pages/ProductPage/ProductPage';
 import axios from "axios";
 
 function App() {
-
   const [cart, setCart] = useState([]);
 
+  const reloadCart = async () => {
+    const response = await axios.get("/api/cart-items?expand=product");
+    setCart(response.data);
+  };
+
   useEffect(() => {
-    const fetchAppData = async () => {
-      const response = await axios.get("/api/cart-items?expand=product");
-      setCart(response.data);
-    }
-    fetchAppData()
-  }, [])
+    reloadCart();
+  }, []);
 
   return (
     <Routes>
       <Route path='/' element={<HomePage cart={cart} />} />
-      <Route path='/checkout' element={<CheckoutPage cart={cart} />} />
+      <Route path='/checkout' element={<CheckoutPage cart={cart} onCartChanged={reloadCart} />} />
       <Route path='/favorites' element={<FavoritesPage cart={cart} />} />
       <Route path='/catalog' element={<CatalogPage cart={cart} />} />
       <Route path='/stores' element={<StoresPage cart={cart} />} />
-      <Route path="/product/:productId" element={<ProductPage cart={cart} />} />
+      <Route path="/product/:productId" element={<ProductPage cart={cart} onCartChanged={reloadCart} />} />
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;

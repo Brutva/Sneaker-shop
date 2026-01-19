@@ -33,6 +33,7 @@ import { defaultFavorites } from './defaultData/defaultFavorites.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -67,7 +68,26 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
-await sequelize.sync({ alter: true });
+async function syncOrResetDb() {
+  try {
+    await sequelize.sync({ alter: true });
+
+    if (sequelize.getDialect() === 'sqlite') {
+      const [rows] = await sequelize.query("PRAGMA table_info('CartItems');");
+      const cols = (rows || []).map(r => r.name);
+
+      if (!cols.includes('offerId')) {
+        console.warn("Outdated DB schema: CartItems missing 'offerId'. Resetting DB...");
+        await sequelize.sync({ force: true });
+      }
+    }
+  } catch (err) {
+    console.error('DB schema update failed. Recreating database...', err);
+    await sequelize.sync({ force: true });
+  }
+}
+
+await syncOrResetDb();
 
 function addTimestamps(items) {
   const timestamp = Date.now();
@@ -78,23 +98,32 @@ function addTimestamps(items) {
   }));
 }
 
-const productCount = await Product.count();
-if (productCount === 0) {
+if (await Product.count() === 0) {
   await Product.bulkCreate(addTimestamps(defaultProducts));
-  await DeliveryOption.bulkCreate(addTimestamps(defaultDeliveryOptions));
-  await CartItem.bulkCreate(addTimestamps(defaultCart));
-  await Order.bulkCreate(addTimestamps(defaultOrders));
-  await Favorite.bulkCreate(addTimestamps(defaultFavorites));
 }
 
-const storeCount = await Store.count();
-if (storeCount === 0) {
+if (await Store.count() === 0) {
   await Store.bulkCreate(addTimestamps(defaultStores));
 }
 
-const offerCount = await Offer.count();
-if (offerCount === 0) {
+if (await Offer.count() === 0) {
   await Offer.bulkCreate(addTimestamps(defaultOffers));
+}
+
+if (await DeliveryOption.count() === 0) {
+  await DeliveryOption.bulkCreate(addTimestamps(defaultDeliveryOptions));
+}
+
+if (await CartItem.count() === 0) {
+  await CartItem.bulkCreate(addTimestamps(defaultCart));
+}
+
+if (await Order.count() === 0) {
+  await Order.bulkCreate(addTimestamps(defaultOrders));
+}
+
+if (await Favorite.count() === 0) {
+  await Favorite.bulkCreate(addTimestamps(defaultFavorites));
 }
 
 app.listen(PORT, () => {

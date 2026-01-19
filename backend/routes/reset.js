@@ -10,6 +10,11 @@ import { defaultCart } from '../defaultData/defaultCart.js';
 import { defaultOrders } from '../defaultData/defaultOrders.js';
 import { Favorite } from '../models/Favorite.js';
 import { defaultFavorites } from '../defaultData/defaultFavorites.js';
+import { Store } from '../models/Store.js';
+import { Offer } from '../models/Offer.js';
+import { defaultStores } from '../defaultData/defaultStores.js';
+import { defaultOffers } from '../defaultData/defaultOffers.js';
+
 
 const router = express.Router();
 
@@ -48,12 +53,29 @@ router.post('/', async (req, res) => {
     updatedAt: new Date(timestamp + index)
   }));
 
+  const storesWithTimestamps = defaultStores.map((store, index) => ({
+    ...store,
+    createdAt: new Date(timestamp + index),
+    updatedAt: new Date(timestamp + index)
+  }));
+
+  const offersWithTimestamps = defaultOffers.map((offer, index) => ({
+    ...offer,
+    createdAt: new Date(timestamp + index),
+    updatedAt: new Date(timestamp + index)
+  }));
+
+
 
   await Product.bulkCreate(productsWithTimestamps);
+  await Store.bulkCreate(storesWithTimestamps);
+  await Offer.bulkCreate(offersWithTimestamps);
+
   await DeliveryOption.bulkCreate(deliveryOptionsWithTimestamps);
   await CartItem.bulkCreate(cartItemsWithTimestamps);
   await Order.bulkCreate(ordersWithTimestamps);
   await Favorite.bulkCreate(favoritesWithTimestamps);
+
 
   res.status(204).send();
 });

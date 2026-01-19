@@ -1,24 +1,51 @@
 import express from 'express';
 import { Order } from '../models/Order.js';
 import { Product } from '../models/Product.js';
+import { Store } from '../models/Store.js';
+import { Offer } from '../models/Offer.js';
 import { DeliveryOption } from '../models/DeliveryOption.js';
 import { CartItem } from '../models/CartItem.js';
 
 const router = express.Router();
 
+async function enrichOrderProducts(orderProducts) {
+  const enriched = await Promise.all(orderProducts.map(async (line) => {
+    let productDetails = null;
+    let storeDetails = null;
+    let offerDetails = null;
+
+    if (line.offerId) {
+      offerDetails = await Offer.findByPk(line.offerId);
+      if (offerDetails) {
+        productDetails = await Product.findByPk(offerDetails.productId);
+        storeDetails = await Store.findByPk(offerDetails.storeId);
+      } else if (line.productId) {
+        productDetails = await Product.findByPk(line.productId);
+        if (line.storeId) storeDetails = await Store.findByPk(line.storeId);
+      }
+    } else if (line.productId) {
+      productDetails = await Product.findByPk(line.productId);
+      if (line.storeId) storeDetails = await Store.findByPk(line.storeId);
+    }
+
+    return {
+      ...line,
+      product: productDetails,
+      store: storeDetails,
+      offer: offerDetails
+    };
+  }));
+
+  return enriched;
+}
+
 router.get('/', async (req, res) => {
   const expand = req.query.expand;
-  let orders = await Order.unscoped().findAll({ order: [['orderTimeMs', 'DESC']] }); // Sort by most recent
+  let orders = await Order.unscoped().findAll({ order: [['orderTimeMs', 'DESC']] });
 
   if (expand === 'products') {
     orders = await Promise.all(orders.map(async (order) => {
-      const products = await Promise.all(order.products.map(async (product) => {
-        const productDetails = await Product.findByPk(product.productId);
-        return {
-          ...product,
-          product: productDetails
-        };
-      }));
+      const products = await enrichOrderProducts(order.products || []);
       return {
         ...order.toJSON(),
         products
@@ -37,22 +64,33 @@ router.post('/', async (req, res) => {
   }
 
   let totalCostCents = 0;
+
   const products = await Promise.all(cartItems.map(async (item) => {
-    const product = await Product.findByPk(item.productId);
-    if (!product) {
-      throw new Error(`Product not found: ${item.productId}`);
+    const offer = await Offer.findByPk(item.offerId);
+    if (!offer) {
+      throw new Error(`Offer not found: ${item.offerId}`);
     }
+
     const deliveryOption = await DeliveryOption.findByPk(item.deliveryOptionId);
     if (!deliveryOption) {
       throw new Error(`Invalid delivery option: ${item.deliveryOptionId}`);
     }
-    const productCost = product.priceCents * item.quantity;
+
+    const productCost = offer.priceCents * item.quantity;
     const shippingCost = deliveryOption.priceCents;
+
     totalCostCents += productCost + shippingCost;
-    const estimatedDeliveryTimeMs = Date.now() + deliveryOption.deliveryDays * 24 * 60 * 60 * 1000;
+
+    const estimatedDeliveryTimeMs =
+      Date.now() + deliveryOption.deliveryDays * 24 * 60 * 60 * 1000;
+
     return {
-      productId: item.productId,
+      offerId: offer.id,
+      productId: offer.productId,
+      storeId: offer.storeId,
+      priceCents: offer.priceCents, 
       quantity: item.quantity,
+      deliveryOptionId: item.deliveryOptionId,
       estimatedDeliveryTimeMs
     };
   }));
@@ -80,13 +118,7 @@ router.get('/:orderId', async (req, res) => {
   }
 
   if (expand === 'products') {
-    const products = await Promise.all(order.products.map(async (product) => {
-      const productDetails = await Product.findByPk(product.productId);
-      return {
-        ...product,
-        product: productDetails
-      };
-    }));
+    const products = await enrichOrderProducts(order.products || []);
     order = {
       ...order.toJSON(),
       products

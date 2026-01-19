@@ -1,21 +1,26 @@
 import express from 'express';
 import { CartItem } from '../models/CartItem.js';
-import { Product } from '../models/Product.js';
+import { Offer } from '../models/Offer.js';
 import { DeliveryOption } from '../models/DeliveryOption.js';
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
   const cartItems = await CartItem.findAll();
+
   let totalItems = 0;
   let productCostCents = 0;
   let shippingCostCents = 0;
 
   for (const item of cartItems) {
-    const product = await Product.findByPk(item.productId);
+    const offer = await Offer.findByPk(item.offerId);
+    if (!offer) continue;
+
     const deliveryOption = await DeliveryOption.findByPk(item.deliveryOptionId);
+    if (!deliveryOption) continue;
+
     totalItems += item.quantity;
-    productCostCents += product.priceCents * item.quantity;
+    productCostCents += offer.priceCents * item.quantity;
     shippingCostCents += deliveryOption.priceCents;
   }
 

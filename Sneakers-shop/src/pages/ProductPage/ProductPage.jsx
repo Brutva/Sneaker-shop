@@ -5,25 +5,6 @@ import { Footer } from "../../components/Footer";
 import { formatMoney } from "../../utils/money";
 
 export function ProductPage({ cart }) {
-  const product = {
-    id: "00000000-0000-0000-000000000001",
-    brand: "Nike",
-    name: "Air Max 90 “Infrared”",
-    image: "src/public/images/Nike-Air-Max-90-Infrared-2020.jpg",
-    rating: { stars: 4.6, count: 1284 },
-    priceCents: 1490,
-    offers: 12,
-    category: "Lifestyle",
-    colorway: "Infrared / Black / Grey",
-    releaseDate: "2020",
-    sizes: ["40", "41", "42", "43", "44", "45"]
-  };
-
-  const offers = [
-    { store: "SneakerHub", priceCents: 1490, delivery: "2–4 days", note: "New" },
-    { store: "Kicks Market", priceCents: 1590, delivery: "1–3 days", note: "New" },
-    { store: "Urban Store", priceCents: 1690, delivery: "3–7 days", note: "New" }
-  ];
 
   return (
     <div>

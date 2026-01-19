@@ -2,11 +2,11 @@ import { DataTypes } from 'sequelize';
 import { sequelize } from './index.js';
 
 export const CartItem = sequelize.define('CartItem', {
-  productId: {
+  offerId: {
     type: DataTypes.STRING,
     allowNull: false,
     references: {
-      model: 'Products',
+      model: 'Offers',
       key: 'id'
     }
   },

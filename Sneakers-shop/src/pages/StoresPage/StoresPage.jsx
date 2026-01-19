@@ -11,10 +11,13 @@ export function StoresPage({ cart }) {
 
     useEffect(() => {
         const getStoreData = async () => {
-            const response = await axios.get("/api/stores");
-            setStores(response.data)
-                .catch((err) => console.log("не удалось загрузить магазины", err))
-        }
+            try {
+                const response = await axios.get("/api/stores?expand=stats");
+                setStores(response.data);
+            } catch (err) {
+                console.log("не удалось загрузить магазины", err);
+            }
+        };
         getStoreData()
     })
 
