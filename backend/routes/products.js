@@ -25,17 +25,20 @@ function normalizeImageUrl(req, image) {
 function normalizeProductImages(req, productPlain) {
   productPlain.image = normalizeImageUrl(req, productPlain.image);
 
-  let imgs = productPlain.images;
-  if (!Array.isArray(imgs) || imgs.length === 0) {
-    imgs = [productPlain.image, productPlain.image, productPlain.image, productPlain.image];
-  }
+  const raw = [
+    productPlain.image,
+    productPlain.image2,
+    productPlain.image3,
+    productPlain.image4
+  ].filter(Boolean);
 
-  const normalized = imgs.map((img) => normalizeImageUrl(req, img));
-  while (normalized.length < 4) normalized.push(normalized[normalized.length - 1]);
+  const imgs = raw.length ? raw : [productPlain.image];
+  while (imgs.length < 4) imgs.push(imgs[imgs.length - 1]);
 
-  productPlain.images = normalized.slice(0, 4);
+  productPlain.images = imgs.slice(0, 4).map(img => normalizeImageUrl(req, img));
   return productPlain;
 }
+
 
 function parseExpand(expand) {
   if (!expand) return new Set();

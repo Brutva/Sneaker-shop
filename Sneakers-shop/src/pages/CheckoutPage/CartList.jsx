@@ -1,12 +1,13 @@
+import axios from "axios";
 import { formatMoney } from "../../utils/money";
 import { DeliveryOptions } from "./deliveryOptions";
 
-export function CartList({cart, deliveryOptions}) {
+export function CartList({ cart, deliveryOptions, removeFromCart }) {
   return (
     <div className="cart-list">
       {cart.map((cartItem) => {
         return (
-          <div key={cartItem.productId} >
+          <div key={cartItem.id} >
             <article className="cart-item">
               <div className="cart-item__img">
                 <img src={cartItem.product.image} />
@@ -57,8 +58,14 @@ export function CartList({cart, deliveryOptions}) {
                   <div className="cart-actions">
                     <button className="btn btn--ghost btn--icon" type="button"
                       title="Move to favorites">♥</button>
-                    <button className="btn btn--ghost btn--icon" type="button"
-                      title="Remove">🗑</button>
+                    <button 
+                      className="btn btn--ghost btn--icon" 
+                      type="button"
+                      title="Remove"
+                      onClick={() => removeFromCart(cartItem.id)}
+                      >
+                        🗑
+                      </button>
                   </div>
                 </div>
 

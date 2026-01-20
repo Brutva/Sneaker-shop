@@ -2,6 +2,9 @@ export const defaultProducts = [
   {
     id: "00000000-0000-0000-000000000001",
     image: "images/products/Nike-Air-Max-90-Infrared-2020.jpg",
+    image2: "images/products/Nike-Air-Max-90-Infrared-2020-img5.jpg",
+    image3: "images/products/Nike-Air-Max-90-Infrared-2020-img3.png",
+    image4: "images/products/Nike-Air-Max-90-Infrared-2020-img4.png",
     brand: "Nike",
     name: "Air Max 90 'Infrared'",
     rating: {

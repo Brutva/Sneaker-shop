@@ -12,6 +12,13 @@ import axios from "axios";
 function App() {
   const [cart, setCart] = useState([]);
 
+  const removeFromCart = async (id) => {
+    setCart(cart.filter((item) => item.id !== id));
+    await axios.delete(`/api/cart-items/${id}`);
+
+    onCartChanged();
+  };
+
   const reloadCart = async () => {
     const response = await axios.get("/api/cart-items?expand=product");
     setCart(response.data);
@@ -24,7 +31,7 @@ function App() {
   return (
     <Routes>
       <Route path='/' element={<HomePage cart={cart} />} />
-      <Route path='/checkout' element={<CheckoutPage cart={cart} onCartChanged={reloadCart} />} />
+      <Route path='/checkout' element={<CheckoutPage cart={cart} onCartChanged={reloadCart} removeFromCart={removeFromCart} />} />
       <Route path='/favorites' element={<FavoritesPage cart={cart} />} />
       <Route path='/catalog' element={<CatalogPage cart={cart} />} />
       <Route path='/stores' element={<StoresPage cart={cart} />} />

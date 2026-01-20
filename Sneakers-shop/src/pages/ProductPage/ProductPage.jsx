@@ -3,8 +3,64 @@ import "../../normalize/adaptive.css";
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import { formatMoney } from "../../utils/money";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
-export function ProductPage({ cart }) {
+export function ProductPage({ cart, onCartChanged }) {
+
+  const { productId } = useParams();
+  const [product, setProduct] = useState(null);
+  const [activeImg, setActiveImg]  = useState(0)
+
+  useEffect(() => {
+    const load = async() => {
+      const response = await axios.get(`/api/products/${productId}?expand=all`);
+      setProduct(response.data)
+      setActiveImg(0)
+    }
+    load()
+  }, [productId])
+
+  if (!product) {
+    return (
+      <div>
+        <Header cart={cart} />
+        <main className="page">
+          <div className="container">
+            <p>Loading...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  let images = [];
+
+  if (product.image) images.push(product.image);
+  if (product.image2) images.push(product.image2);
+  if (product.image3) images.push(product.image3);
+  if (product.image4) images.push(product.image4);
+
+  while (images.length < 4) {
+    images.push(product.image);
+  }
+
+  let offers = [];
+  if (product.offersList) {
+    offers = product.offersList;
+  }
+
+  function getStoreName(offer) {
+    if (offer.store && offer.store.name) {
+      return offer.store.name;
+    }
+    if (offer.storeId) {
+      return offer.storeId;
+    }
+    return "Store";
+  }
 
   return (
     <div>
@@ -21,26 +77,26 @@ export function ProductPage({ cart }) {
           <div className="product-top">
             <section className="card product-gallery">
               <div className="product-gallery__main">
-                <img className="product-gallery__img" src={product.image} alt={product.name} />
+                <img className="product-gallery__img" src={images[activeImg]} alt={product.name} />
                 <div className="product-gallery__badge badge">
                   <span>{product.offers} offers</span>
                 </div>
               </div>
 
               <div className="product-gallery__thumbs" aria-label="Gallery thumbnails">
-                <button className="thumb is-active" type="button" aria-label="Thumbnail 1">
-                  <img src={product.image} alt="" />
-                </button>
-                <button className="thumb" type="button" aria-label="Thumbnail 2">
-                  <img src="src/public/images/adidas-UltraBoost-1.0-DNA-White-Black-Grey.jpg" alt="" />
-                </button>
-                <button className="thumb" type="button" aria-label="Thumbnail 3">
-                  <img src="src/public/images/New-Balance-990v6-Made-in-USA-Purple.jpg" alt="" />
-                </button>
-                <button className="thumb" type="button" aria-label="Thumbnail 4">
-                  <img src={product.image} alt="" />
-                </button>
+                {images.map((img, idx) => (
+                  <button
+                    key={idx}
+                    className={`thumb ${idx === activeImg ? "is-active" : ""}`}
+                    type="button"
+                    aria-label={`Thumbnail ${idx + 1}`}
+                    onClick={() => setActiveImg(idx)}
+                  >
+                    <img src={img} style={{"height": 230}} alt="" />
+                  </button>
+                ))}
               </div>
+
             </section>
 
             <aside className="card product-summary">
@@ -94,9 +150,10 @@ export function ProductPage({ cart }) {
                 </div>
 
                 <div className="sizes-grid">
-                  {product.sizes.map((s) => (
+                  {product.sizes && product.sizes.map((s) => (
                     <button key={s} className="size-btn" type="button">{s}</button>
                   ))}
+
                 </div>
                 <section className="card about-card">
                   <h2 className="about-title">About this sneaker</h2>
@@ -128,30 +185,52 @@ export function ProductPage({ cart }) {
               </div>
 
               {offers.map((o) => (
-                <div key={o.store} className="offers-row" role="row">
+                <div key={o.id} className="offers-row" role="row">
                   <div className="offers-cell" role="cell">
                     <div className="store">
-                      <div className="store__logo">{o.store.slice(0, 1)}</div>
-                      <div className="store__name">{o.store}</div>
+                      <div className="store__logo">
+                        {getStoreName(o)[0]}
+                      </div>
+                      <div className="store__name">
+                        {getStoreName(o)}
+                      </div>
                     </div>
                   </div>
 
-                  <div className="offers-cell muted" role="cell">{o.delivery}</div>
-                  <div className="offers-cell" role="cell">
-                    <span className="pill">{o.note}</span>
+                  <div className="offers-cell muted" role="cell">
+                    {o.delivery ? o.delivery : "-"}
                   </div>
 
-                  <div className="offers-cell offers-cell--right" role="cell">
-                    <span className="price price--md price--primary">
-                      {formatMoney(o.priceCents * 10)}
+                  <div className="offers-cell" role="cell">
+                    <span className="pill">
+                      {o.condition ? o.condition : "New"}
                     </span>
                   </div>
 
                   <div className="offers-cell offers-cell--right" role="cell">
-                    <button className="btn btn--primary" type="button">Go</button>
+                    <span className="price price--md price--primary">
+                      {formatMoney((o.priceCents ? o.priceCents : 0) * 10)}
+                    </span>
+                  </div>
+
+                  <div className="offers-cell offers-cell--right" role="cell">
+                    <button 
+                      className="btn btn--primary" 
+                      type="button"
+                      onClick={async() => {
+                        await axios.post("/api/cart-items", { 
+                          offerId: o.id, 
+                          quantity: 1 
+                        });
+
+                        onCartChanged()
+                      }}>
+                      Add to cart
+                    </button>
                   </div>
                 </div>
               ))}
+
             </div>
           </section>
 

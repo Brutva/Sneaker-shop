@@ -7,33 +7,33 @@ export const Product = sequelize.define('Product', {
     primaryKey: true,
     allowNull: false
   },
+
   brand: {
     type: DataTypes.STRING,
     allowNull: false
   },
 
-  image: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
+  image: { type: DataTypes.STRING, allowNull: false },
 
-  images: {
-    type: DataTypes.JSON,
-    allowNull: true
-  },
+  image2: { type: DataTypes.STRING, allowNull: true },
+  image3: { type: DataTypes.STRING, allowNull: true },
+  image4: { type: DataTypes.STRING, allowNull: true },
 
   name: {
     type: DataTypes.STRING,
     allowNull: false
   },
+
   rating: {
     type: DataTypes.JSON,
     allowNull: false
   },
+
   priceCents: {
     type: DataTypes.INTEGER,
     allowNull: false
   },
+
   offers: {
     type: DataTypes.INTEGER,
     allowNull: false
@@ -43,18 +43,22 @@ export const Product = sequelize.define('Product', {
     type: DataTypes.STRING,
     allowNull: true
   },
+
   colorway: {
     type: DataTypes.STRING,
     allowNull: true
   },
+
   releaseDate: {
     type: DataTypes.STRING,
     allowNull: true
   },
+
   sizes: {
     type: DataTypes.JSON,
     allowNull: true
   },
+
   description: {
     type: DataTypes.TEXT,
     allowNull: true
@@ -70,12 +74,14 @@ export const Product = sequelize.define('Product', {
       this.setDataValue('keywords', val.join(','));
     }
   },
+
   createdAt: {
     type: DataTypes.DATE(3)
   },
+
   updatedAt: {
     type: DataTypes.DATE(3)
-  },
+  }
 }, {
   defaultScope: {
     order: [['createdAt', 'ASC']]

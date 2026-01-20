@@ -7,23 +7,26 @@ import axios from "axios";
 import { CartList } from "./CartList";
 import { PaymentSummary } from "./PaymentSummary";
 
-export function CheckoutPage({ cart }) {
+export function CheckoutPage({ cart, removeFromCart }) {
 
-    const [deliveryOptions, setdeliveryOptions] = useState([]);
+    const [deliveryOptions, setDeliveryOptions] = useState([]);
     const [paymentSummary, setPaymentSummary] = useState(null);
 
-    useEffect(() => {
-        const fetchCheckoutData = async () => {
-            let response = await axios.get(
-                '/api/delivery-options?expand=estimatedDeliveryTime'
-            );
-            setdeliveryOptions(response.data);
+    const loadDeliveryOptions = async () => {
+        const response = await axios.get("/api/delivery-options?expand=estimatedDeliveryTime");
+        setDeliveryOptions(response.data);
+    };
 
-            response = await axios.get("/api/payment-summary");
-            setPaymentSummary(response.data);
-        }
-        fetchCheckoutData()
-    }, [])
+    const loadPaymentSummary = async () => {
+        const response = await axios.get("/api/payment-summary");
+        setPaymentSummary(response.data);
+    };
+
+    useEffect(() => {
+        loadDeliveryOptions();
+        loadPaymentSummary();
+    }, []);
+
 
     return (
         <div>
@@ -33,7 +36,7 @@ export function CheckoutPage({ cart }) {
                     <div className="cart-head">
                         <div>
                             <h1 className="page__title">Your Cart</h1>
-                            <p className="page__sub">2 items</p>
+                            <p className="page__sub">{cart.length} {cart.length === 1 ? "item": "items"}</p>
                         </div>
                         <a className="btn btn--outline" href="search.html">← Continue shopping</a>
                     </div>
@@ -46,7 +49,11 @@ export function CheckoutPage({ cart }) {
                                     <button className="btn btn--ghost" type="button">Clear cart</button>
                                 </div>
 
-                                <CartList cart={cart} deliveryOptions={deliveryOptions} />
+                                <CartList 
+                                    cart={cart} 
+                                    deliveryOptions={deliveryOptions} 
+                                    removeFromCart={removeFromCart}
+                                />
                             </div>
 
                         </section>
