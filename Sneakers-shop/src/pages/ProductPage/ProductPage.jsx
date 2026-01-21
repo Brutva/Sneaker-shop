@@ -3,7 +3,7 @@ import "../../normalize/adaptive.css";
 import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 import { formatMoney } from "../../utils/money";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
@@ -11,7 +11,12 @@ export function ProductPage({ cart, onCartChanged }) {
 
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
-  const [activeImg, setActiveImg]  = useState(0)
+  const [activeImg, setActiveImg]  = useState(0);
+  const pricesRef = useRef(null);
+
+  const scrollToPrice = () => {
+    pricesRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+  } 
 
   useEffect(() => {
     const load = async() => {
@@ -120,10 +125,23 @@ export function ProductPage({ cart, onCartChanged }) {
               </div>
 
               <div className="product-actions">
-                <button className="btn btn--primary btn--lg" type="button">
+                <button 
+                  className="btn btn--primary btn--lg" 
+                  type="button"
+                  onClick={scrollToPrice}
+                >
                   Compare prices
                 </button>
-                <button className="btn btn--outline btn--lg" type="button" aria-label="Favorite">
+                <button 
+                  className="btn btn--outline btn--lg" 
+                  type="button" 
+                  aria-label="Favorite"
+                  onClick={async() => {
+                    await axios.post("/api/favorites/", {
+                      productId: product.id
+                    })
+                  }}
+                >
                   ♥ Favorite
                 </button>
               </div>
@@ -166,7 +184,7 @@ export function ProductPage({ cart, onCartChanged }) {
             </aside>
           </div>
 
-          <section className="card offers-card">
+          <section ref={pricesRef} className="card offers-card">
             <div className="offers-head">
               <h2 className="offers-title">Price comparison</h2>
               <div className="offers-actions">

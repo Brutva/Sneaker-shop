@@ -21,7 +21,7 @@ export function CartList({ cart, deliveryOptions, removeFromCart }) {
                   </div>
 
                   <div className="cart-item__price">
-                    <div className="price price--md price--primary">{formatMoney(cartItem.product.priceCents * 10)}</div>
+                    <div className="price price--md price--primary">{formatMoney(cartItem.offer.priceCents * 10)}</div>
                     <div className="muted" style={{ fontSize: "12px" }}>Best store offer</div>
                   </div>
                 </div>
@@ -77,7 +77,7 @@ export function CartList({ cart, deliveryOptions, removeFromCart }) {
                   </div>
                   <div className="cart-item__subtotal">
                     <span className="muted" style={{ fontWeight: 800 }}>Item total</span>
-                    <span className="price price--md">{formatMoney(cartItem.product.priceCents * 10)}</span>
+                    <span className="price price--md">{formatMoney(cartItem.offer.priceCents * 10)}</span>
                   </div>
                 </div>
               </div>

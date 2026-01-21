@@ -2,7 +2,7 @@ import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
 import './CheckoutPage.css';
 import '../../normalize/adaptive.css'
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import axios from "axios";
 import { CartList } from "./CartList";
 import { PaymentSummary } from "./PaymentSummary";
@@ -25,8 +25,7 @@ export function CheckoutPage({ cart, removeFromCart }) {
     useEffect(() => {
         loadDeliveryOptions();
         loadPaymentSummary();
-    }, []);
-
+    }, []);   
 
     return (
         <div>
@@ -49,11 +48,24 @@ export function CheckoutPage({ cart, removeFromCart }) {
                                     <button className="btn btn--ghost" type="button">Clear cart</button>
                                 </div>
 
-                                <CartList 
-                                    cart={cart} 
-                                    deliveryOptions={deliveryOptions} 
-                                    removeFromCart={removeFromCart}
-                                />
+                                {cart.length === 0 ? (
+                                    <section className="cart-empty card" style={{ marginTop: "18px" }}>
+                                        <div style={{ padding: "26px", textAlign: "center" }}>
+                                            <h2 style={{ fontWeight: 900, marginBottom: "10px" }}>Your cart is empty</h2>
+                                            <p className="muted" style={{ marginBottom: "16px" }}>
+                                                Find sneakers and add them to your cart to compare store offers.
+                                            </p>
+                                            <a className="btn btn--primary btn--lg" href="search.html">Browse sneakers</a>
+                                        </div>
+                                    </section>
+                                ) : (
+                                    <CartList
+                                        cart={cart}
+                                        deliveryOptions={deliveryOptions}
+                                        removeFromCart={removeFromCart}
+                                    />
+                                )}
+
                             </div>
 
                         </section>
@@ -85,14 +97,6 @@ export function CheckoutPage({ cart, removeFromCart }) {
                             </div>
                         </aside>
                     </div>
-
-                    <section className="cart-empty card" style={{ marginTop: "18px" }}>
-                        <div style={{ padding: "26px", textAlign: "center" }}>
-                            <h2 style={{ fontWeight: 900, marginBottom: "10px" }}>Your cart is empty</h2>
-                            <p className="muted" style={{ marginBottom: "16px" }}>Find sneakers and add them to your cart to compare store offers.</p>
-                            <a className="btn btn--primary btn--lg" href="search.html">Browse sneakers</a>
-                        </div>
-                    </section>
                     <div style={{ height: "60px" }}></div>
                 </div>
             </main>
