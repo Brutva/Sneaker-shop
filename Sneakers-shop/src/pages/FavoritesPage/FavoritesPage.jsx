@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { formatMoney } from "../../utils/money";
 
-export function FavoritesPage({ cart }) {
+export function FavoritesPage({ cart, product }) {
 
     const [favoriteProducts, setFavoriteProducts] = useState([])
 
@@ -33,7 +33,7 @@ export function FavoritesPage({ cart }) {
                         {favoriteProducts.map((favoriteProduct) => {
                             return (
                                 <article className="product-card">
-                                    <a href="product.html" className="product-card__media">
+                                    <a href={`/product/${favoriteProduct.productId}`} className="product-card__media">
                                         <img className="product-card__img" src={favoriteProduct.product.image} alt="Sneaker image" />
                                         <div className="product-card__actions">
 

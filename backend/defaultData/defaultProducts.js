@@ -2,9 +2,9 @@ export const defaultProducts = [
   {
     id: "00000000-0000-0000-000000000001",
     image: "images/products/Nike-Air-Max-90-Infrared-2020.jpg",
-    image2: "images/products/Nike-Air-Max-90-Infrared-2020-img5.jpg",
-    image3: "images/products/Nike-Air-Max-90-Infrared-2020-img3.png",
-    image4: "images/products/Nike-Air-Max-90-Infrared-2020-img4.png",
+    image2: "images/products/Nike-Air-Max-90-Infrared-2020-img5-white.png",
+    image3: "images/products/Nike-Air-Max-90-Infrared-2020-img3-white.png",
+    image4: "images/products/Nike-Air-Max-90-Infrared-2020-img2-white.png",
     brand: "Nike",
     name: "Air Max 90 'Infrared'",
     rating: {
@@ -18,6 +18,9 @@ export const defaultProducts = [
   {
     id: "00000000-0000-0000-000000000002",
     image: "images/products/New-Balance-990v6-Made-in-USA-Purple.jpg",
+    image2: "images/products/nb-990v6-img2-900x900-white.png",
+    image3: "images/products/nb-990v6-img3-900x900-white.png",
+    image4: "images/products/nb-990v6-img4-900x900-white.png",
     brand: "New Balance",
     name: "990v6",
     rating: {
@@ -30,7 +33,10 @@ export const defaultProducts = [
   },
   {
     id: "00000000-0000-0000-000000000003",
-    image: "images/products/Air-Jordan-1-Retro-High-OG-Utility-Stash.jpg",
+    image: "images/products/jordan-1-retro-img1-900x900-white.png",
+    image2: "images/products/jordan-1-retro-img2-900x900-white.png",
+    image3: "images/products/jordan-1-retro-img3-900x900-white.png",
+    image4: "images/products/jordan-1-retro-img4-900x900-white.png",
     brand: "Jordan",
     name: "Air Jordan 1 Retro High",
     rating: {
@@ -43,7 +49,10 @@ export const defaultProducts = [
   },
   {
     id: "00000000-0000-0000-000000000004",
-    image: "images/products/adidas-UltraBoost-1.0-DNA-White-Black-Grey.jpg",
+    image: "images/products/adidas-ultraboost-img1-900x900-white.png",
+    image2: "images/products/adidas-ultraboost-img2-900x900-white.png",
+    image3: "images/products/adidas-ultraboost-img3-900x900-white.png",
+    image4: "images/products/adidas-ultraboost-img4-900x900-white.png",
     brand: "Adidas",
     name: "Ultraboost 1.0",
     rating: {
