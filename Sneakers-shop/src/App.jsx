@@ -33,7 +33,7 @@ function App() {
       <Route path='/' element={<HomePage cart={cart} />} />
       <Route path='/checkout' element={<CheckoutPage cart={cart} onCartChanged={reloadCart} removeFromCart={removeFromCart} />} />
       <Route path='/favorites' element={<FavoritesPage cart={cart} />} />
-      <Route path='/catalog' element={<CatalogPage cart={cart} />} />
+      <Route path='/catalog' element={<CatalogPage cart={cart}/>} />
       <Route path='/stores' element={<StoresPage cart={cart} />} />
       <Route path="/product/:productId" element={<ProductPage cart={cart} onCartChanged={reloadCart} />} />
     </Routes>
