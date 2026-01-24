@@ -2,7 +2,7 @@ import axios from "axios";
 import { formatMoney } from "../../utils/money";
 import { DeliveryOptions } from "./deliveryOptions";
 
-export function CartList({ cart, deliveryOptions, removeFromCart }) {
+export function CartList({ cart, deliveryOptions, removeFromCart, changeQty}) {
   return (
     <div className="cart-list">
       {cart.map((cartItem) => {
@@ -41,16 +41,24 @@ export function CartList({ cart, deliveryOptions, removeFromCart }) {
                     <label className="cart-meta__field">
                       <span className="cart-meta__label">Quantity</span>
                       <div className="qty">
-                        <button className="qty__btn" type="button"
-                          aria-label="Decrease">−</button>
+                        <button 
+                          className="qty__btn" 
+                          type="button"
+                          aria-label="Decrease"
+                          onClick={() => changeQty(cartItem.id, -1)}
+                        >−</button>
                         <input className="qty__input"
                           type="text"
                           value={cartItem.quantity}
                           inputMode="numeric"
                           readOnly
                         />
-                        <button className="qty__btn" type="button"
-                          aria-label="Increase">+</button>
+                        <button 
+                          className="qty__btn" 
+                          type="button"
+                          aria-label="Increase"
+                          onClick={() => changeQty(cartItem.id, +1)}
+                        >+</button>
                       </div>
                     </label>
                   </div>

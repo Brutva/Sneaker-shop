@@ -125,7 +125,6 @@
     border: 1px solid hsl(var(--border) / .6);
     background: hsl(var(--card));
     transition: .25s ease;
-    max-width: 450px;
 }
 
 .product-card:hover {
@@ -280,14 +279,7 @@
     box-shadow: var(--shadow-lg);
 }
 
-.grid-products {
+.gridCatalog {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 24px;
-}
-
-.containerProducts {
-    display: flex;
-    justify-content: center;
-    margin: 0;
 }

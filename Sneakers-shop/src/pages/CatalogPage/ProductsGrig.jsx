@@ -3,7 +3,7 @@ import { formatMoney } from "../../utils/money"
 
 export function ProductsGrid({ products }) {
   return (
-    <div className="grid-products">
+    <div className="grid-products gridCatalog">
       {products.map((product) => {
         return (
           <div className="containerProducts" key={product.id}>

@@ -28,10 +28,28 @@ function App() {
     reloadCart();
   }, []);
 
+  const changeQty = async (id, delta) => {
+    const item = cart.find((x) => x.id === id);
+    if (!item) return;
+
+    const nextQty = Math.max(1, item.quantity + delta);
+
+    await axios.put(`/api/cart-items/${id}`, { quantity: nextQty });
+    await reloadCart();
+  };
+
+
+
   return (
     <Routes>
       <Route path='/' element={<HomePage cart={cart} />} />
-      <Route path='/checkout' element={<CheckoutPage cart={cart} onCartChanged={reloadCart} removeFromCart={removeFromCart} />} />
+      <Route 
+        path='/checkout' 
+        element={<CheckoutPage 
+                  cart={cart} 
+                  onCartChanged={reloadCart} 
+                  removeFromCart={removeFromCart}
+                  changeQty={changeQty} />} />
       <Route path='/favorites' element={<FavoritesPage cart={cart} />} />
       <Route path='/catalog' element={<CatalogPage cart={cart}/>} />
       <Route path='/stores' element={<StoresPage cart={cart} />} />

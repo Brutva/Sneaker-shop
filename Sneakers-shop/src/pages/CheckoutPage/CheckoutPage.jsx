@@ -7,7 +7,7 @@ import axios from "axios";
 import { CartList } from "./CartList";
 import { PaymentSummary } from "./PaymentSummary";
 
-export function CheckoutPage({ cart, removeFromCart }) {
+export function CheckoutPage({ cart, removeFromCart, changeQty }) {
 
     const [deliveryOptions, setDeliveryOptions] = useState([]);
     const [paymentSummary, setPaymentSummary] = useState(null);
@@ -63,6 +63,7 @@ export function CheckoutPage({ cart, removeFromCart }) {
                                         cart={cart}
                                         deliveryOptions={deliveryOptions}
                                         removeFromCart={removeFromCart}
+                                        changeQty={changeQty}
                                     />
                                 )}
 
