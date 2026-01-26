@@ -2,7 +2,7 @@ import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
 import './CheckoutPage.css';
 import '../../normalize/adaptive.css'
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { CartList } from "./CartList";
 import { PaymentSummary } from "./PaymentSummary";
@@ -37,7 +37,7 @@ export function CheckoutPage({ cart, removeFromCart, changeQty }) {
                             <h1 className="page__title">Your Cart</h1>
                             <p className="page__sub">{cart.length} {cart.length === 1 ? "item": "items"}</p>
                         </div>
-                        <a className="btn btn--outline" href="search.html">← Continue shopping</a>
+                        <a className="btn btn--outline" href="/catalog">← Continue shopping</a>
                     </div>
 
                     <div className="cart-layout">
@@ -55,7 +55,7 @@ export function CheckoutPage({ cart, removeFromCart, changeQty }) {
                                             <p className="muted" style={{ marginBottom: "16px" }}>
                                                 Find sneakers and add them to your cart to compare store offers.
                                             </p>
-                                            <a className="btn btn--primary btn--lg" href="search.html">Browse sneakers</a>
+                                            <a className="btn btn--primary btn--lg" href="/catalog">Browse sneakers</a>
                                         </div>
                                     </section>
                                 ) : (

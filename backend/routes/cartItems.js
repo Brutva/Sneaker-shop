@@ -7,9 +7,18 @@ import { Store } from "../models/Store.js";
 
 const router = express.Router();
 
+// CartItem.id is the default auto-increment integer.
+// But most other ids in this project are strings (Offer.id, Product.id, Store.id, DeliveryOption.id).
+// So we parse ints only where they are actually expected.
 const toInt = (v) => {
   const n = Number(v);
   return Number.isInteger(n) ? n : null;
+};
+
+const toId = (v) => {
+  if (v === undefined || v === null) return null;
+  const s = String(v).trim();
+  return s.length ? s : null;
 };
 
 const validateQuantity = (q) => {
@@ -61,9 +70,10 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const offerId = req.body.offerId ? toInt(req.body.offerId) : null;
-    const productId = req.body.productId ? toInt(req.body.productId) : null;
-    const storeId = req.body.storeId ? toInt(req.body.storeId) : null;
+    // NOTE: offerId/productId/storeId are strings in this project.
+    const offerId = toId(req.body.offerId);
+    const productId = toId(req.body.productId);
+    const storeId = toId(req.body.storeId);
     const quantity = toInt(req.body.quantity);
 
     if (!validateQuantity(quantity)) {
@@ -99,7 +109,8 @@ router.post("/", async (req, res) => {
     cartItem = await CartItem.create({
       offerId: resolvedOffer.id,
       quantity,
-      deliveryOptionId: 1,
+      // DeliveryOption ids are strings in the seed ("1", "2", "3")
+      deliveryOptionId: "1",
     });
 
     res.status(201).json(cartItem);
@@ -133,7 +144,7 @@ router.put("/:id", async (req, res) => {
     }
 
     if (hasDelivery) {
-      const deliveryOptionId = toInt(req.body.deliveryOptionId);
+      const deliveryOptionId = toId(req.body.deliveryOptionId);
       if (!deliveryOptionId) {
         return res.status(400).json({ error: "Invalid delivery option id" });
       }
