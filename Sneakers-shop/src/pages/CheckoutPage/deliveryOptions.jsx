@@ -1,43 +1,43 @@
 import dayjs from "dayjs";
 import { formatMoney } from "../../utils/money";
 
-export function DeliveryOptions({deliveryOptions = [], cartItem}) {
-
+export function DeliveryOptions({ deliveryOptions = [], cartItem, changeDelivery }) {
   if (!cartItem) return null;
-  
+
+  const selectedId = String(cartItem.deliveryOptionId ?? "");
+  const groupName = `delivery-option-${cartItem.id}`; 
+
   return (
     <div className="delivery-options">
+      {deliveryOptions.map((opt) => {
+        const optId = String(opt.id);
 
-      {deliveryOptions.map((deliveryOption) => {
-        let priceString = 'FREE';
-
-        if (deliveryOption.priceCents > 0) {
-          priceString = `${formatMoney(deliveryOption.priceCents * 10)}`
-        }
+        const priceString =
+          opt.priceCents > 0 ? formatMoney(opt.priceCents * 1) : "FREE";
 
         return (
-          <label key={deliveryOption.id} className="delivery-option">
+          <label key={optId} className="delivery-option">
             <input
               className="delivery-option__radio"
               type="radio"
-              checked={deliveryOption.id === cartItem.deliveryOptionId}
-              name={`delivery-option-${cartItem.productId}`}
-              readOnly
+              name={groupName}
+              value={optId}
+              checked={optId === selectedId}
+              onChange={() => changeDelivery(cartItem.id, optId)} 
             />
+
             <div className="delivery-option__body">
               <div className="delivery-option__top">
                 <span className="delivery-option__name">Standard</span>
                 <span className="delivery-option__price">{priceString}</span>
               </div>
               <div className="muted" style={{ fontSize: 12, fontWeight: 800 }}>
-                {dayjs(deliveryOption.estimatedDeliveryTimeMs)
-                  .format('dddd, MMMM, D')}
+                {dayjs(opt.estimatedDeliveryTimeMs).format("dddd, MMMM, D")}
               </div>
             </div>
           </label>
-        )
+        );
       })}
-
     </div>
-  )
+  );
 }

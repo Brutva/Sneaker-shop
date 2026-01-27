@@ -1,59 +1,73 @@
-import { Routes, Route } from 'react-router-dom';
-import './App.css';
-import { HomePage } from './pages/HomePage/HomePage';
-import { CheckoutPage } from './pages/CheckoutPage/CheckoutPage';
-import { FavoritesPage } from './pages/FavoritesPage/FavoritesPage';
-import { CatalogPage } from './pages/CatalogPage/CatalogPage';
-import { StoresPage } from './pages/StoresPage/StoresPage';
+import { Routes, Route } from "react-router-dom";
+import "./App.css";
+import { HomePage } from "./pages/HomePage/HomePage";
+import { CheckoutPage } from "./pages/CheckoutPage/CheckoutPage";
+import { FavoritesPage } from "./pages/FavoritesPage/FavoritesPage";
+import { CatalogPage } from "./pages/CatalogPage/CatalogPage";
+import { StoresPage } from "./pages/StoresPage/StoresPage";
+import { ProductPage } from "./pages/ProductPage/ProductPage";
 import { useEffect, useState } from "react";
-import { ProductPage } from './pages/ProductPage/ProductPage';
 import axios from "axios";
 
 function App() {
   const [cart, setCart] = useState([]);
+  const [paymentSummary, setPaymentSummary] = useState(null);
 
-  const removeFromCart = async (id) => {
-    setCart(cart.filter((item) => item.id !== id));
-    await axios.delete(`/api/cart-items/${id}`);
+  const refreshCart = async () => {
+    const [cartRes, summaryRes] = await Promise.all([
+      axios.get("/api/cart-items?expand=product"), // ВАЖНО: product (не products)
+      axios.get("/api/payment-summary"),
+    ]);
 
-    onCartChanged();
-  };
-
-  const reloadCart = async () => {
-    const response = await axios.get("/api/cart-items?expand=product");
-    setCart(response.data);
+    setCart(cartRes.data);
+    setPaymentSummary(summaryRes.data);
   };
 
   useEffect(() => {
-    reloadCart();
+    refreshCart();
   }, []);
+
+  const removeFromCart = async (id) => {
+    await axios.delete(`/api/cart-items/${id}`);
+    await refreshCart();
+  };
 
   const changeQty = async (id, delta) => {
     const item = cart.find((x) => x.id === id);
     if (!item) return;
 
-    const nextQty = Math.max(1, item.quantity + delta);
-
+    const nextQty = Math.min(10, Math.max(1, item.quantity + delta));
     await axios.put(`/api/cart-items/${id}`, { quantity: nextQty });
-    await reloadCart();
+    await refreshCart();
   };
 
-
+  const changeDelivery = async (cartItemId, deliveryOptionId) => {
+    await axios.put(`/api/cart-items/${cartItemId}`, { deliveryOptionId });
+    await refreshCart();
+  };
 
   return (
     <Routes>
-      <Route path='/' element={<HomePage cart={cart} />} />
-      <Route 
-        path='/checkout' 
-        element={<CheckoutPage 
-                  cart={cart} 
-                  onCartChanged={reloadCart} 
-                  removeFromCart={removeFromCart}
-                  changeQty={changeQty} />} />
-      <Route path='/favorites' element={<FavoritesPage cart={cart} />} />
-      <Route path='/catalog' element={<CatalogPage cart={cart}/>} />
-      <Route path='/stores' element={<StoresPage cart={cart} />} />
-      <Route path="/product/:productId" element={<ProductPage cart={cart} onCartChanged={reloadCart} />} />
+      <Route path="/" element={<HomePage cart={cart} />} />
+      <Route
+        path="/checkout"
+        element={
+          <CheckoutPage
+            cart={cart}
+            paymentSummary={paymentSummary}
+            removeFromCart={removeFromCart}
+            changeQty={changeQty}
+            changeDelivery={changeDelivery}
+          />
+        }
+      />
+      <Route path="/favorites" element={<FavoritesPage cart={cart} />} />
+      <Route path="/catalog" element={<CatalogPage cart={cart} />} />
+      <Route path="/stores" element={<StoresPage cart={cart} />} />
+      <Route
+        path="/product/:productId"
+        element={<ProductPage cart={cart} onCartChanged={refreshCart} />}
+      />
     </Routes>
   );
 }
