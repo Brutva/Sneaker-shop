@@ -39,7 +39,6 @@ function normalizeProductImages(req, productPlain) {
   return productPlain;
 }
 
-
 function parseExpand(expand) {
   if (!expand) return new Set();
   if (expand === 'all') return new Set(['images', 'offers', 'stores']);
@@ -96,19 +95,48 @@ async function attachOffers(req, productsPlain, expandSet) {
 }
 
 router.get('/', async (req, res) => {
-  const search = req.query.search;
+  const search = req.query.search ?? req.query.q;
+
+  const brandQuery = req.query.brand ?? req.query.brands;
+
+  const limit = Number.isFinite(Number(req.query.limit)) ? Math.max(0, Number(req.query.limit)) : null;
+  const offset = Number.isFinite(Number(req.query.offset)) ? Math.max(0, Number(req.query.offset)) : 0;
+
   const expandSet = parseExpand(req.query.expand);
 
   let products = await Product.findAll();
+
+  if (brandQuery) {
+    const raw = Array.isArray(brandQuery)
+      ? brandQuery
+      : String(brandQuery).split(',');
+
+    const brands = raw.map(s => String(s).trim()).filter(Boolean);
+
+    if (brands.length) {
+      const setLower = new Set(brands.map(b => b.toLowerCase()));
+      products = products.filter(p => {
+        const b = String(p.brand || '').trim().toLowerCase();
+        return setLower.has(b);
+      });
+    }
+  }
 
   if (search) {
     const lowerCaseSearch = String(search).toLowerCase();
     products = products.filter(product => {
       const nameMatch = product.name.toLowerCase().includes(lowerCaseSearch);
       const brandMatch = product.brand ? product.brand.toLowerCase().includes(lowerCaseSearch) : false;
-      const keywordsMatch = product.keywords.some(keyword => keyword.toLowerCase().includes(lowerCaseSearch));
+      const keywordsMatch = Array.isArray(product.keywords)
+        ? product.keywords.some(keyword => String(keyword).toLowerCase().includes(lowerCaseSearch))
+        : false;
+
       return nameMatch || brandMatch || keywordsMatch;
     });
+  }
+
+  if (limit !== null) {
+    products = products.slice(offset, offset + limit);
   }
 
   let normalizedProducts = products.map((product) => {
@@ -126,7 +154,6 @@ router.get('/', async (req, res) => {
       delete rest.images;
       return rest;
     });
-
   }
 
   res.json(normalizedProducts);

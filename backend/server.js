@@ -32,15 +32,29 @@ import { defaultOrders } from './defaultData/defaultOrders.js';
 import { defaultFavorites } from './defaultData/defaultFavorites.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+
+app.set('trust proxy', 1); 
+
+const PORT = Number(process.env.PORT) || 3000;
+const HOST = process.env.HOST || '0.0.0.0'; 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(cors());
+const corsOptions = {
+  origin: (origin, cb) => cb(null, true),
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
+
+app.get('/api/health', (req, res) => {
+  res.json({ ok: true, time: new Date().toISOString() });
+});
 
 app.use('/api/products', productRoutes);
 app.use('/api/stores', storesRoutes);
@@ -69,20 +83,25 @@ app.use((err, req, res, next) => {
 });
 
 async function syncOrResetDb() {
+  const isSqlite = sequelize.getDialect() === 'sqlite';
+
   try {
-    await sequelize.sync({ alter: true });
+    if (isSqlite) {
+      const [tables] = await sequelize.query(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name LIKE '%_backup';"
+      );
 
-    if (sequelize.getDialect() === 'sqlite') {
-      const [rows] = await sequelize.query("PRAGMA table_info('CartItems');");
-      const cols = (rows || []).map(r => r.name);
-
-      if (!cols.includes('offerId')) {
-        console.warn("Outdated DB schema: CartItems missing 'offerId'. Resetting DB...");
-        await sequelize.sync({ force: true });
+      for (const t of tables) {
+        await sequelize.query(`DROP TABLE IF EXISTS \`${t.name}\`;`);
       }
+
+      await sequelize.sync({ force: true });
+      return;
     }
+
+    await sequelize.sync({ alter: true });
   } catch (err) {
-    console.error('DB schema update failed. Recreating database...', err);
+    console.error('DB sync failed. Recreating database...', err);
     await sequelize.sync({ force: true });
   }
 }
@@ -126,6 +145,6 @@ if (await Favorite.count() === 0) {
   await Favorite.bulkCreate(addTimestamps(defaultFavorites));
 }
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(PORT, HOST, () => {
+  console.log(`Server is running on http://${HOST}:${PORT}`);
 });

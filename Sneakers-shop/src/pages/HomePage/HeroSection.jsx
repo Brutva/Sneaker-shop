@@ -1,4 +1,22 @@
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 export function HeroSection() {
+
+  const navigate = useNavigate();
+  const [q, setQ] = useState("");
+
+  const trimmed = useMemo(() => q.trim(), [q]);
+
+  const submit = (e) => {
+    e.preventDefault();
+
+    const params = new URLSearchParams();
+    if (trimmed) params.set("q", trimmed);
+
+    navigate(`/catalog${params.toString() ? `?${params.toString()}` : ""}`);
+  };
+
   return (
     <section className="hero">
       <div className="container hero__inner animate-fade-in">
@@ -15,9 +33,21 @@ export function HeroSection() {
               <path d="M16.5 16.5 21 21" fill="none" stroke="currentColor" strokeWidth="2"
                 strokeLinecap="round" />
             </svg>
-            <input className="searchbar__input" name="q" type="text"
-              placeholder="Search sneakers by model, brand, or SKU..." />
-            <button className="searchbar__clear" type="button" aria-label="Clear">✕</button>
+            <input 
+              className="searchbar__input" 
+              name="q" 
+              type="text"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search sneakers by model, brand, or SKU..." 
+            />
+            <button 
+              className="searchbar__clear" 
+              type="button" 
+              aria-label="Clear"
+              onClick={() => setQ("")}
+            >✕
+            </button>
           </form>
         </div>
 

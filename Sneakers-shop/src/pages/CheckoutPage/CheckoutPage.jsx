@@ -90,7 +90,7 @@ export function CheckoutPage({
                                     paymentSummary={paymentSummary}
                                     cart={cart}
                                     deliveryOptions={deliveryOptions}
-                                />
+                                />  
                             </div>
 
                             <div className="card cart-panel" style={{ marginTop: "14px" }}>
