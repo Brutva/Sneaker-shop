@@ -11,7 +11,7 @@ export function CatalogPage({ cart }) {
     const [searchParams, setSearchParams] = useSearchParams();
     const urlQuery = (searchParams.get('q') || searchParams.get('search') || '').trim();
 
-    const BRAND_OPTIONS = ["Nike", "Adidas", "Jordan", "New Balance"];
+    const BRAND_OPTIONS = ["Nike", "Adidas", "Jordan", "New Balance", "Vans", "Anta", "LiNing"];
 
     const [products, setProducts] = useState([]);
     const [selectedBrands, setSelectedBrands] = useState(new Set());

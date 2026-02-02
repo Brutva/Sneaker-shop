@@ -14,7 +14,7 @@ export function HomePage({ cart }) {
     useEffect(() => {
         const getHomeData = async () => {
             try {
-                const response = await axios.get("/api/products", { params: { limit: 12 } });
+                const response = await axios.get("/api/products", { params: { limit: 4 } });
                 setProducts(response.data);
             } catch (err) {
                 console.error("Не удалось загрузить товары", err);
