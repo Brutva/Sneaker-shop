@@ -64,6 +64,12 @@ export const Product = sequelize.define('Product', {
     allowNull: true
   },
 
+  type: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+
+
   keywords: {
     type: DataTypes.STRING,
     allowNull: false,

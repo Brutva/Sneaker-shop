@@ -44,7 +44,7 @@ export function ProductsGrid({ products }) {
                 </div>
                 <div className="product-card__footer">
                   <span className="price price--md price--primary"><span
-                    className="price__prefix">from</span>{formatMoney(product.priceCents * 10)}</span>
+                    className="price__prefix">from</span>{formatMoney(product.priceCents)}</span>
                 </div>
               </div>
             </article>

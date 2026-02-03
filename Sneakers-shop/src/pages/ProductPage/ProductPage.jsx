@@ -117,7 +117,7 @@ export function ProductPage({ cart, onCartChanged }) {
               <div className="product-price">
                 <span className="price price--xl price--primary">
                   <span className="price__prefix">from</span>
-                  {formatMoney(product.priceCents * 10)}
+                  {formatMoney(product.priceCents )}
                 </span>
                 <div className="muted" style={{ fontSize: 12, fontWeight: 700 }}>
                   Prices may vary by size & store
@@ -176,8 +176,7 @@ export function ProductPage({ cart, onCartChanged }) {
                 <section className="card about-card">
                   <h2 className="about-title">About this sneaker</h2>
                   <p className="muted about-text">
-                    Placeholder description. Тут ты потом подставишь реальные данные: описание, материалы, история релиза,
-                    состав, ссылки на магазины и т.д.
+                    {product.description}
                   </p>
                 </section>
               </div>
@@ -227,7 +226,7 @@ export function ProductPage({ cart, onCartChanged }) {
 
                   <div className="offers-cell offers-cell--right" role="cell">
                     <span className="price price--md price--primary">
-                      {formatMoney((o.priceCents ? o.priceCents : 0) * 10)}
+                      {formatMoney((o.priceCents ? o.priceCents : 0))}
                     </span>
                   </div>
 

@@ -9,14 +9,25 @@ import { useSearchParams } from "react-router-dom";
 export function CatalogPage({ cart }) {
 
     const [searchParams, setSearchParams] = useSearchParams();
+
     const urlQuery = (searchParams.get('q') || searchParams.get('search') || '').trim();
+    const sort = (searchParams.get("sort") || "default").trim();
 
     const BRAND_OPTIONS = ["Nike", "Adidas", "Jordan", "New Balance", "Vans", "Anta", "LiNing"];
 
+    const TYPE_OPTIONS = [
+        { value: "lifestyle", label: "lifestyle" },
+        { value: "running", label: "running" },
+        { value: "basketball", label: "basketball" },
+    ];
+
     const [products, setProducts] = useState([]);
+
     const [selectedBrands, setSelectedBrands] = useState(new Set());
+    const [selectedTypes, setSelectedTypes] = useState(new Set());
 
     const selectedBrandsKey = [...selectedBrands].sort().join(',');
+    const selectedTypesKey = [...selectedTypes].sort().join(',');
 
     useEffect(() => {
         const load = async () => {
@@ -24,6 +35,9 @@ export function CatalogPage({ cart }) {
                 const params = {};
                 if (urlQuery) params.search = urlQuery;
                 if (selectedBrands.size) params.brand = [...selectedBrands].join(',');
+                if (selectedTypes.size) params.type = [...selectedTypes].join(',');
+                if (sort !== "default") params.sort = sort;
+
                 const response = await axios.get("/api/products", { params });
                 setProducts(response.data);
             } catch (err) {
@@ -32,7 +46,7 @@ export function CatalogPage({ cart }) {
         };
 
         load();
-    }, [urlQuery, selectedBrandsKey]);
+    }, [urlQuery, sort, selectedBrandsKey, selectedTypesKey]);
 
     const toggleBrand = (brand) => {
         setSelectedBrands(prev => {
@@ -43,9 +57,36 @@ export function CatalogPage({ cart }) {
         });
     };
 
+    const toggleType = (type) => {
+        setSelectedTypes(prev => {
+            const next = new Set(prev);
+            if (next.has(type)) next.delete(type);
+            else next.add(type);
+            return next;
+        });
+    };
+
     const clearFilters = () => {
         setSelectedBrands(new Set());
+        setSelectedTypes(new Set());
         setSearchParams({});
+    };
+
+    const onChangeSort = (e) => {
+        const nextSort = e.target.value;
+        const next = {};
+        if (nextSort !== "default") next.sort = nextSort;
+        if (urlQuery) next.search = urlQuery;
+        setSearchParams(next);
+    };
+
+    const onSearch = (e) => {
+        e.preventDefault();
+        const value = (e.target.elements.search?.value || "").trim();
+        const next = {};
+        if (sort !== "default") next.sort = sort;
+        if (value) next.search = value;
+        setSearchParams(next);
     };
 
     return (
@@ -65,8 +106,12 @@ export function CatalogPage({ cart }) {
                                         className="filters__clear"
                                         type="button"
                                         onClick={clearFilters}
-                                    >Clear</button>
+                                    >
+                                        Clear
+                                    </button>
                                 </div>
+
+                                
 
                                 <div className="filter-section">
                                     <div className="filter-section__row">
@@ -86,38 +131,20 @@ export function CatalogPage({ cart }) {
 
                                 <div className="filter-section">
                                     <div className="filter-section__row">
-                                        <div className="filter-section__label">Sizes (EU)</div>
+                                        <div className="filter-section__label">Type</div>
                                     </div>
-                                    <label className="field"><input type="checkbox" /> 41</label>
-                                    <label className="field"><input type="checkbox" /> 42</label>
-                                    <label className="field"><input type="checkbox" /> 43</label>
-                                    <label className="field"><input type="checkbox" /> 44</label>
+                                    {TYPE_OPTIONS.map((t) => (
+                                        <label key={t.value} className="field">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedTypes.has(t.value)}
+                                                onChange={() => toggleType(t.value)}
+                                            />{" "}
+                                            {t.label}
+                                        </label>
+                                    ))}
                                 </div>
 
-                                <div className="filter-section">
-                                    <div className="filter-section__row">
-                                        <div className="filter-section__label">Price</div>
-                                        <div className="muted" style={{ fontWight: 800 }}>$0 — $500</div>
-                                    </div>
-                                    <div className="muted" style={{ fontSize: "13px" }}>(range slider placeholder)</div>
-                                </div>
-
-                                <div className="filter-section">
-                                    <div className="filter-section__row">
-                                        <div className="filter-section__label">Availability</div>
-                                    </div>
-                                    <label className="field"><input type="checkbox" /> In stock only</label>
-                                </div>
-
-                                <div className="filter-section">
-                                    <div className="filter-section__row">
-                                        <div className="filter-section__label">Delivery Speed</div>
-                                    </div>
-                                    <label className="field"><input type="radio" name="delivery" /> Any</label>
-                                    <label className="field"><input type="radio" name="delivery" /> Within 2 days</label>
-                                    <label className="field"><input type="radio" name="delivery" /> Within 5 days</label>
-                                    <label className="field"><input type="radio" name="delivery" /> Within 7 days</label>
-                                </div>
                             </div>
                         </aside>
 
@@ -129,12 +156,15 @@ export function CatalogPage({ cart }) {
 
                                 <div className="controls__right">
                                     <span className="muted" style={{ fontSize: "14px", fontWeight: 700 }}>Sort by:</span>
-                                    <select className="select">
-                                        <option>Lowest Price</option>
-                                        <option>Highest Price</option>
-                                        <option>Best Rating</option>
-                                        <option>Most Offers</option>
-                                        <option>Newest</option>
+
+                                    <select className="select" value={sort} onChange={onChangeSort}>
+                                        <option value="default">Default</option>
+                                        <option value="price_asc">Lowest Price</option>
+                                        <option value="price_desc">Highest Price</option>
+                                        <option value="rating_desc">Best Rating</option>
+                                        <option value="offers_desc">Most Offers</option>
+                                        <option value="name_asc">Name A-Z</option>
+                                        <option value="name_desc">Name Z-A</option>
                                     </select>
                                 </div>
                             </div>
