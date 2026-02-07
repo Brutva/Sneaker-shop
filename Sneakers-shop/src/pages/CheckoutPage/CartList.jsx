@@ -20,7 +20,7 @@ export function CartList({ cart, deliveryOptions, removeFromCart, changeQty, cha
 
                 <div className="cart-item__price">
                   <div className="price price--md price--primary">
-                    {formatMoney(cartItem.offer.priceCents * 10)}
+                    {formatMoney(cartItem.offer.priceCents )}
                   </div>
                   <div className="muted" style={{ fontSize: "12px" }}>
                     Best store offer
@@ -101,7 +101,7 @@ export function CartList({ cart, deliveryOptions, removeFromCart, changeQty, cha
                     Item total
                   </span>
                   <span className="price price--md">
-                    {formatMoney(cartItem.offer.priceCents * 10)}
+                    {formatMoney(cartItem.offer.priceCents)}
                   </span>
                 </div>
               </div>

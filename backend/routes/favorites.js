@@ -6,23 +6,21 @@ import { Product } from '../models/Product.js';
 const router = express.Router();
 
 function normalizeImageUrl(req, image) {
-  if (!image || typeof image !== 'string') return image;
-  if (image.startsWith('http://') || image.startsWith('https://')) return image;
+  if (!image || typeof image !== "string") return image;
+  if (image.startsWith("http://") || image.startsWith("https://")) return image;
 
-  const baseUrl = `${req.protocol}://${req.get('host')}`;
-  let imgPath = image.replace(/\\/g, '/');
+  let imgPath = image.replace(/\\/g, "/");
 
-  if (imgPath.includes('src/public/images/')) {
-    const filename = imgPath.split('/').pop();
+  if (imgPath.includes("src/public/images/")) {
+    const filename = imgPath.split("/").pop();
     imgPath = `images/products/${filename}`;
   }
 
-  if (imgPath.startsWith('/')) imgPath = imgPath.slice(1);
-  return `${baseUrl}/${imgPath}`;
+  if (!imgPath.startsWith("/")) imgPath = "/" + imgPath;
+  return imgPath;
 }
 
-// GET /api/favorites
-// GET /api/favorites?expand=product  -> вернёт favorites + объект product
+
 router.get('/', async (req, res) => {
   const expand = req.query.expand;
   const favorites = await Favorite.findAll();

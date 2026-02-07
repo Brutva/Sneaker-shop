@@ -35,7 +35,7 @@ export function PaymentSummary({ cart, paymentSummary }) {
     <div style={{ padding: "0 16px 16px" }}>
       <div className="summary-row">
         <span className="muted">Items ({cart.length})</span>
-        <span className="price">{formatMoney(itemsCents * 10)}</span>
+        <span className="price">{formatMoney(itemsCents)}</span>
       </div>
 
       <div className="summary-row">
@@ -45,14 +45,14 @@ export function PaymentSummary({ cart, paymentSummary }) {
 
       <div className="summary-row">
         <span className="muted">Tax</span>
-        <span className="price">{formatMoney(taxCents * 10)}</span>
+        <span className="price">{formatMoney(taxCents)}</span>
       </div>
 
       <hr className="hr" style={{ margin: "12px 0" }} />
 
       <div className="summary-row summary-row--total">
         <span style={{ fontWeight: 900 }}>Order total</span>
-        <span className="price price--md">{formatMoney(totalCents * 10)}</span>
+        <span className="price price--md">{formatMoney(totalCents)}</span>
       </div>
 
       <button className="btn btn--primary btn--lg" style={{ width: "100%", marginTop: "14px" }}>

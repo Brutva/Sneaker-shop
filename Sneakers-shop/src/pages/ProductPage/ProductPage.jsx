@@ -11,15 +11,15 @@ export function ProductPage({ cart, onCartChanged }) {
 
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
-  const [activeImg, setActiveImg]  = useState(0);
+  const [activeImg, setActiveImg] = useState(0);
   const pricesRef = useRef(null);
 
   const scrollToPrice = () => {
     pricesRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
-  } 
+  }
 
   useEffect(() => {
-    const load = async() => {
+    const load = async () => {
       const response = await axios.get(`/api/products/${productId}?expand=all`);
       setProduct(response.data)
       setActiveImg(0)
@@ -97,7 +97,7 @@ export function ProductPage({ cart, onCartChanged }) {
                     aria-label={`Thumbnail ${idx + 1}`}
                     onClick={() => setActiveImg(idx)}
                   >
-                    <img src={img} style={{"height": 230}} alt="" />
+                    <img src={img} style={{ "height": 230 }} alt="" />
                   </button>
                 ))}
               </div>
@@ -117,7 +117,7 @@ export function ProductPage({ cart, onCartChanged }) {
               <div className="product-price">
                 <span className="price price--xl price--primary">
                   <span className="price__prefix">from</span>
-                  {formatMoney(product.priceCents )}
+                  {formatMoney(product.priceCents)}
                 </span>
                 <div className="muted" style={{ fontSize: 12, fontWeight: 700 }}>
                   Prices may vary by size & store
@@ -125,18 +125,18 @@ export function ProductPage({ cart, onCartChanged }) {
               </div>
 
               <div className="product-actions">
-                <button 
-                  className="btn btn--primary btn--lg" 
+                <button
+                  className="btn btn--primary btn--lg"
                   type="button"
                   onClick={scrollToPrice}
                 >
                   Compare prices
                 </button>
-                <button 
-                  className="btn btn--outline btn--lg" 
-                  type="button" 
+                <button
+                  className="btn btn--outline btn--lg"
+                  type="button"
                   aria-label="Favorite"
-                  onClick={async() => {
+                  onClick={async () => {
                     await axios.post("/api/favorites/", {
                       productId: product.id
                     })
@@ -201,52 +201,62 @@ export function ProductPage({ cart, onCartChanged }) {
                 <div className="offers-cell offers-cell--right" role="columnheader"></div>
               </div>
 
-              {offers.map((o) => (
-                <div key={o.id} className="offers-row" role="row">
-                  <div className="offers-cell" role="cell">
-                    <div className="store">
-                      <div className="store__logo">
-                        {getStoreName(o)[0]}
-                      </div>
-                      <div className="store__name">
-                        {getStoreName(o)}
+              {offers.map((o) => {
+
+                const store = o.store ?? { name: getStoreName(o), logo: null };
+                
+                return(
+                  <div key={o.id} className="offers-row" role="row">
+                    <div className="offers-cell" role="cell">
+                      <div className="store">
+                        <div className="store__logo">
+                          {store.logo ? (
+                            <img src={store.logo} alt={store.name} />
+                          ) : (
+                            store.name?.[0] || "S"
+                          )}
+                        </div>
+
+                        <div className="store__name">
+                          {store.name}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="offers-cell muted" role="cell">
-                    {o.delivery ? o.delivery : "-"}
-                  </div>
+                    <div className="offers-cell muted" role="cell">
+                      {o.delivery ? o.delivery : "-"}
+                    </div>
 
-                  <div className="offers-cell" role="cell">
-                    <span className="pill">
-                      {o.condition ? o.condition : "New"}
-                    </span>
-                  </div>
+                    <div className="offers-cell" role="cell">
+                      <span className="pill">
+                        {o.condition ? o.condition : "New"}
+                      </span>
+                    </div>
 
-                  <div className="offers-cell offers-cell--right" role="cell">
-                    <span className="price price--md price--primary">
-                      {formatMoney((o.priceCents ? o.priceCents : 0))}
-                    </span>
-                  </div>
+                    <div className="offers-cell offers-cell--right" role="cell">
+                      <span className="price price--md price--primary">
+                        {formatMoney((o.priceCents ? o.priceCents : 0))}
+                      </span>
+                    </div>
 
-                  <div className="offers-cell offers-cell--right" role="cell">
-                    <button 
-                      className="btn btn--primary" 
-                      type="button"
-                      onClick={async() => {
-                        await axios.post("/api/cart-items", { 
-                          offerId: o.id, 
-                          quantity: 1 
-                        });
+                    <div className="offers-cell offers-cell--right" role="cell">
+                      <button
+                        className="btn btn--primary"
+                        type="button"
+                        onClick={async () => {
+                          await axios.post("/api/cart-items", {
+                            offerId: o.id,
+                            quantity: 1
+                          });
 
-                        onCartChanged()
-                      }}>
-                      Add to cart
-                    </button>
+                          onCartChanged()
+                        }}>
+                        Add to cart
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
 
             </div>
           </section>

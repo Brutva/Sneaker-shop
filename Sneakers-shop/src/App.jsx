@@ -15,7 +15,7 @@ function App() {
 
   const refreshCart = async () => {
     const [cartRes, summaryRes] = await Promise.all([
-      axios.get("/api/cart-items?expand=product"), // ВАЖНО: product (не products)
+      axios.get("/api/cart-items?expand=product"), 
       axios.get("/api/payment-summary"),
     ]);
 

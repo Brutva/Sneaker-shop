@@ -21,20 +21,20 @@ function parseCsvParam(value) {
 }
 
 function normalizeImageUrl(req, image) {
-  if (!image || typeof image !== 'string') return image;
-  if (image.startsWith('http://') || image.startsWith('https://')) return image;
+  if (!image || typeof image !== "string") return image;
+  if (image.startsWith("http://") || image.startsWith("https://")) return image;
 
-  const baseUrl = `${req.protocol}://${req.get('host')}`;
   let imgPath = image.replace(/\\/g, "/");
 
-  if (imgPath.includes('src/public/images/')) {
-    const filename = imgPath.split('/').pop();
+  if (imgPath.includes("src/public/images/")) {
+    const filename = imgPath.split("/").pop();
     imgPath = `images/products/${filename}`;
   }
 
-  if (imgPath.startsWith('/')) imgPath = imgPath.slice(1);
-  return `${baseUrl}/${imgPath}`;
+  if (!imgPath.startsWith("/")) imgPath = "/" + imgPath;
+  return imgPath;
 }
+
 
 function normalizeProductImages(req, productPlain) {
   productPlain.image = normalizeImageUrl(req, productPlain.image);
