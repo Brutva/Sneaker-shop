@@ -1,65 +1,73 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useI18n } from '../../i18n.jsx';
+
+const QUICK_BRANDS = ['Nike', 'Adidas', 'New Balance', 'Puma', 'Jordan', 'ASICS'];
 
 export function HeroSection() {
-
   const navigate = useNavigate();
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState('');
+  const { t } = useI18n();
 
   const trimmed = useMemo(() => q.trim(), [q]);
 
   const submit = (e) => {
     e.preventDefault();
-
     const params = new URLSearchParams();
-    if (trimmed) params.set("q", trimmed);
+    if (trimmed) params.set('q', trimmed);
+    navigate(`/catalog${params.toString() ? `?${params.toString()}` : ''}`);
+  };
 
-    navigate(`/catalog${params.toString() ? `?${params.toString()}` : ""}`);
+  const goBrand = (brand) => {
+    const params = new URLSearchParams();
+    params.set('q', brand);
+    navigate(`/catalog?${params.toString()}`);
   };
 
   return (
     <section className="hero">
       <div className="container hero__inner animate-fade-in">
-        <h1 className="hero__title">Find the Best <span>Sneaker Prices</span></h1>
-        <p className="hero__subtitle">
-          Compare prices from trusted stores. Save money on your favorite kicks.
-        </p>
+        <h1 className="hero__title">{t('heroTitleBefore')} <span>{t('heroTitleAccent')}</span></h1>
+        <p className="hero__subtitle">{t('heroSubtitle')}</p>
 
-        <div className="hero__search">
-          <form className="searchbar" action="search.html" method="get">
-            <svg className="searchbar__icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" fill="none" stroke="currentColor"
-                strokeWidth="2" />
-              <path d="M16.5 16.5 21 21" fill="none" stroke="currentColor" strokeWidth="2"
-                strokeLinecap="round" />
-            </svg>
-            <input 
-              className="searchbar__input" 
-              name="q" 
-              type="text"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Search sneakers by model, brand, or SKU..." 
-            />
-            <button 
-              className="searchbar__clear" 
-              type="button" 
-              aria-label="Clear"
-              onClick={() => setQ("")}
-            >✕
+        <div className="hero__searchWrap">
+          <form className="hero__search" onSubmit={submit}>
+            <div className="searchbar searchbar--hero">
+              <input
+                className="searchbar__input"
+                name="q"
+                type="text"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder={t('searchPlaceholder')}
+              />
+
+              {q && (
+                <button
+                  className="searchbar__clear"
+                  type="button"
+                  aria-label={t('clear')}
+                  onClick={() => setQ('')}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            <button className="btn btn--primary btn--lg hero__searchBtn" type="submit">
+              {t('search')}
             </button>
           </form>
         </div>
 
         <div className="chips">
-          <a className="chip" href="search.html?q=Nike">Nike</a>
-          <a className="chip" href="search.html?q=Adidas">Adidas</a>
-          <a className="chip" href="search.html?q=New%20Balance">New Balance</a>
-          <a className="chip" href="search.html?q=Puma">Puma</a>
-          <a className="chip" href="search.html?q=Jordan">Jordan</a>
-          <a className="chip" href="search.html?q=ASICS">ASICS</a>
+          {QUICK_BRANDS.map((brand) => (
+            <button key={brand} className="chip" type="button" onClick={() => goBrand(brand)}>
+              {brand}
+            </button>
+          ))}
         </div>
       </div>
     </section>
-  )
+  );
 }

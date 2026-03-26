@@ -2,6 +2,7 @@ import express from 'express';
 import { Op } from 'sequelize';
 import { Favorite } from '../models/Favorite.js';
 import { Product } from '../models/Product.js';
+import { Offer } from '../models/Offer.js';
 
 const router = express.Router();
 
@@ -20,6 +21,38 @@ function normalizeImageUrl(req, image) {
   return imgPath;
 }
 
+async function attachOfferStats(productsPlain) {
+  const productIds = productsPlain.map(p => p.id);
+  if (!productIds.length) return productsPlain;
+
+  const offers = await Offer.findAll({
+    where: { productId: { [Op.in]: productIds } },
+    attributes: ['productId', 'priceCents'],
+  });
+
+  const stats = new Map();
+  for (const o of offers) {
+    const pid = o.productId;
+    const price = o.priceCents;
+
+    const s = stats.get(pid) || { count: 0, min: Infinity };
+    s.count += 1;
+    if (Number.isFinite(price)) s.min = Math.min(s.min, price);
+    stats.set(pid, s);
+  }
+
+  return productsPlain.map(p => {
+    const s = stats.get(p.id);
+    if (!s) {
+      p.offers = 0;
+      return p;
+    }
+
+    p.offers = s.count;
+    if (Number.isFinite(s.min)) p.priceCents = s.min;
+    return p;
+  });
+}
 
 router.get('/', async (req, res) => {
   const expand = req.query.expand;
@@ -33,11 +66,18 @@ router.get('/', async (req, res) => {
       where: { id: { [Op.in]: ids } }
     });
 
-    const productById = new Map(products.map(p => {
+    let productsPlain = products.map(p => {
       const data = p.get({ plain: true });
       data.image = normalizeImageUrl(req, data.image);
-      return [data.id, data];
-    }));
+      data.image2 = normalizeImageUrl(req, data.image2);
+      data.image3 = normalizeImageUrl(req, data.image3);
+      data.image4 = normalizeImageUrl(req, data.image4);
+      return data;
+    });
+
+    productsPlain = await attachOfferStats(productsPlain);
+
+    const productById = new Map(productsPlain.map(p => [p.id, p]));
 
     return res.json(favorites.map(f => {
       const fav = f.get({ plain: true });

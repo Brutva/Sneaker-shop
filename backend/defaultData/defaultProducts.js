@@ -1,10 +1,10 @@
 export const defaultProducts = [
   {
     id: "00000000-0000-0000-000000000001",
-    image: "images/products/Nike-Air-Max-90-Infrared-2020.jpg",
-    image2: "images/products/Nike-Air-Max-90-Infrared-2020-img5-white.png",
-    image3: "images/products/Nike-Air-Max-90-Infrared-2020-img3-white.png",
-    image4: "images/products/Nike-Air-Max-90-Infrared-2020-img2-white.png",
+    image: "images/products/nike-air-max-90-infarfed-png1.png",
+    image2: "images/products/nike-air-max-90-infarfed-png2.png",
+    image3: "images/products/nike-air-max-90-infarfed-png3.png",
+    image4: "images/products/nike-air-max-90-infarfed-png4.png",
     brand: "Nike",
     name: "Air Max 90 'Infrared'",
     type: "lifestyle",
@@ -28,10 +28,10 @@ export const defaultProducts = [
 
   {
     id: "00000000-0000-0000-000000000002",
-    image: "images/products/New-Balance-990v6-Made-in-USA-Purple.jpg",
-    image2: "images/products/nb-990v6-img2-900x900-white.png",
-    image3: "images/products/nb-990v6-img3-900x900-white.png",
-    image4: "images/products/nb-990v6-img4-900x900-white.png",
+    image: "images/products/new-balance-990v6-png4.png",
+    image2: "images/products/new-balance-990v6-png3.png",
+    image3: "images/products/new-balance-990v6-png2.png",
+    image4: "images/products/new-balance-990v6-png1.png",
     brand: "New Balance",
     name: "990v6",
     type: "lifestyle",
@@ -53,12 +53,12 @@ export const defaultProducts = [
 
   {
     id: "00000000-0000-0000-000000000003",
-    image: "images/products/jordan-1-retro-img1-900x900-white.png",
-    image2: "images/products/jordan-1-retro-img2-900x900-white.png",
-    image3: "images/products/jordan-1-retro-img3-900x900-white.png",
-    image4: "images/products/jordan-1-retro-img4-900x900-white.png",
+    image: "images/products/jordan-1-retro-high-pollen-png4.png",
+    image2: "images/products/jordan-1-retro-high-pollen-png3.png",
+    image3: "images/products/jordan-1-retro-high-pollen-png2.png",
+    image4: "images/products/jordan-1-retro-high-pollen-png1.png",
     brand: "Jordan",
-    name: "Air Jordan 1 Retro High",
+    name: "Air Jordan 1 Retro High Pollen",
     type: "lifestyle",
     rating: {
       stars: 4.9,
@@ -141,7 +141,7 @@ export const defaultProducts = [
     type: "lifestyle",
     rating: {
       stars: 4.5,
-      count: 5
+      count: 99
     },
     priceCents: 32800,
     offers: 8,
@@ -197,7 +197,7 @@ AF1 ценят за “массивный, уверенный” силуэт, �
     type: "lifestyle",
     rating: {
       stars: 5.0,
-      count: 1
+      count: 145
     },
     priceCents: 8495,
     offers: 8,
@@ -273,7 +273,7 @@ Dunk Low хорош, если тебе нужна модель:
     type: "basketball",
     rating: {
       stars: 5.0,
-      count: 5
+      count: 533
     },
     priceCents: 13000,
     offers: 8,
@@ -299,7 +299,7 @@ Dunk Low хорош, если тебе нужна модель:
     type: "basketball",
     rating: {
       stars: 5.0,
-      count: 1
+      count: 187
     },
     priceCents: 11666,
     offers: 8,
@@ -324,7 +324,7 @@ Dunk Low хорош, если тебе нужна модель:
     type: "basketball",
     rating: {
       stars: 5.0,
-      count: 3
+      count: 333
     },
     priceCents: 10000,
     offers: 8,
@@ -349,7 +349,7 @@ Dunk Low хорош, если тебе нужна модель:
     type: "basketball",
     rating: {
       stars: 5.0,
-      count: 2
+      count: 228
     },
     priceCents: 10999,
     offers: 8,
@@ -374,7 +374,7 @@ Fission 8 хорошо подходит тем, кто любит активны
     type: "running",
     rating: {
       stars: 3.8,
-      count: 4
+      count: 47
     },
     priceCents: 9499,
     offers: 8,
@@ -399,7 +399,7 @@ Energyfalcon часто выбирают как универсальную об�
     type: "running",
     rating: {
       stars: 4.5,
-      count: 2
+      count: 244
     },
     priceCents: 8999,
     offers: 8,
@@ -425,7 +425,7 @@ Energyfalcon часто выбирают как универсальную об�
     type: "basketball",
     rating: {
       stars: 5.0,
-      count: 1
+      count: 156
     },
     priceCents: 16999,
     offers: 8,

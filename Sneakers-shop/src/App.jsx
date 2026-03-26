@@ -46,6 +46,12 @@ function App() {
     await refreshCart();
   };
 
+  const clearCart = async () => {
+    await axios.delete("/api/cart-items"); 
+    await refreshCart(); 
+  };
+
+
   return (
     <Routes>
       <Route path="/" element={<HomePage cart={cart} />} />
@@ -58,6 +64,7 @@ function App() {
             removeFromCart={removeFromCart}
             changeQty={changeQty}
             changeDelivery={changeDelivery}
+            clearCart={clearCart}
           />
         }
       />

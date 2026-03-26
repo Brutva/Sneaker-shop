@@ -1,4 +1,8 @@
+import { useI18n } from '../../i18n.jsx';
+
 export function FeaturesSection() {
+  const { t } = useI18n();
+
   return (
     <section className="features">
       <div className="container">
@@ -10,8 +14,8 @@ export function FeaturesSection() {
               </svg>
             </div>
             <div>
-              <h3 style={{ margin: '0 0 6px', fontWeight: 900 }}>Best Prices</h3>
-              <p className="muted">Compare prices across multiple stores to find the best deal.</p>
+              <h3 style={{ margin: '0 0 6px', fontWeight: 900 }}>{t('featureBestPrices')}</h3>
+              <p className="muted">{t('featureBestPricesText')}</p>
             </div>
           </div>
 
@@ -22,8 +26,8 @@ export function FeaturesSection() {
               </svg>
             </div>
             <div>
-              <h3 style={{ margin: '0 0 6px', fontWeight: 900 }}>Trusted Stores</h3>
-              <p className="muted">All our partner stores are verified and rated by real customers.</p>
+              <h3 style={{ margin: '0 0 6px', fontWeight: 900 }}>{t('featureTrustedStores')}</h3>
+              <p className="muted">{t('featureTrustedStoresText')}</p>
             </div>
           </div>
 
@@ -34,12 +38,12 @@ export function FeaturesSection() {
               </svg>
             </div>
             <div>
-              <h3 style={{ margin: '0 0 6px', fontWeight: 900 }}>Real-time Updates</h3>
-              <p className="muted">Prices and availability updated in real-time from all stores.</p>
+              <h3 style={{ margin: '0 0 6px', fontWeight: 900 }}>{t('featureRealTime')}</h3>
+              <p className="muted">{t('featureRealTimeText')}</p>
             </div>
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -1,84 +1,100 @@
-import { Header } from "../../components/Header";
-import { Footer } from "../../components/Footer";
+import { Footer } from '../../components/Footer';
+import { Header } from '../../components/Header';
+import './FavoritesPage.css';
 import '../../normalize/adaptive.css';
-import './FavoritesPage.css'
-import { useState } from "react";
-import { useEffect } from "react";
-import axios from "axios";
-import { formatMoney } from "../../utils/money";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { formatMoney } from '../../utils/money';
+import { useI18n } from '../../i18n.jsx';
 
-export function FavoritesPage({ cart, product }) {
-
-    const [favoriteProducts, setFavoriteProducts] = useState([])
+export function FavoritesPage({ cart }) {
+    const [favoriteProducts, setFavoriteProducts] = useState([]);
+    const { t } = useI18n();
 
     const loadFavoriteData = async () => {
-        const response = await axios.get("/api/favorites?expand=product");
-        setFavoriteProducts(response.data)
-    }
+        const response = await axios.get('/api/favorites?expand=product');
+        setFavoriteProducts(response.data);
+    };
 
     useEffect(() => {
-        loadFavoriteData()
+        loadFavoriteData();
     }, []);
+
+    const removeFavorite = async (productId) => {
+        try {
+            await axios.delete(`/api/favorites/${productId}`);
+            await loadFavoriteData();
+        } catch (e) {
+            console.error('Failed to remove favorite', e);
+        }
+    };
+
+    const products = favoriteProducts.map((f) => f.product).filter(Boolean);
 
     return (
         <div>
             <Header cart={cart} />
             <main className="page">
                 <div className="container">
-                    <h1 className="page__title">My Favorites</h1>
+                    <h1 className="page__title">{t('favoritesTitle')}</h1>
                     <p className="page__sub">
-                        {favoriteProducts.length} saved {favoriteProducts.length === 1 ? "sneaker" : "sneakers"}
+                        {products.length === 1 ? t('savedSneaker', { count: products.length }) : t('savedSneakers', { count: products.length })}
                     </p>
-                    <div className="grid-products" style={{ marginTop: "18px" }}>
-                        {favoriteProducts.map((favoriteProduct) => {
-                            return (
-                                <article className="product-card">
-                                    <a href={`/product/${favoriteProduct.productId}`} className="product-card__media">
-                                        <img className="product-card__img" src={favoriteProduct.product.image} alt="Sneaker image" />
-                                        <div className="product-card__actions">
 
+                    <div className="grid-products gridCatalog" style={{ marginTop: '18px' }}>
+                        {products.map((product) => (
+                            <div className="containerProducts" key={product.id}>
+                                <article className="product-card">
+                                    <a href={`/product/${product.id}`} className="product-card__media">
+                                        <div className="product-card__actions">
+                                            <button
+                                                className="icon-btn"
+                                                type="button"
+                                                aria-label={t('removeFromFavorites')}
+                                                title={t('remove')}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    removeFavorite(product.id);
+                                                }}
+                                            >
+                                                ✕
+                                            </button>
                                         </div>
-                                        <div className="product-card__badge badge">
-                                            <span>{favoriteProduct.product.offers} offers</span>
-                                        </div>
+
+                                        <img className="product-card__img" src={product.image} alt={product.name} />
+
+                                        <span className="badge">
+                                            {product.offers === 1 ? t('offerCount', { count: product.offers }) : t('offersCount', { count: product.offers })}
+                                        </span>
                                     </a>
+
                                     <div className="product-card__body">
+                                        <p className="kicker">{product.brand}</p>
+
                                         <div className="productInfBtns">
                                             <div className="product-inf">
-                                                <div className="kicker">{favoriteProduct.product.brand}</div>
-                                                <div className="product-card__name line-clamp-2">{favoriteProduct.product.name}</div>
+                                                <h3 className="product-card__name">{product.name}</h3>
+
                                                 <div className="rating">
-                                                    <span className="rating__stars" style={{ "--rating": favoriteProduct.product.rating.stars }}></span>
-                                                    <span className="rating__value">{favoriteProduct.product.rating.stars}</span>
-                                                    <span className="rating__count">({favoriteProduct.product.rating.count})</span>
-                                                </div>favoriteProduct.
-                                            </div>
-                                            <div className="btns">
-                                                <button
-                                                    className="icon-btn icon-btn--danger favoriteBtn"
-                                                    type="button"
-                                                    aria-label="Favorite"
-                                                    onClick={async () => {
-                                                        await axios.delete(`/api/favorites/${favoriteProduct.productId}`);
-                                                        loadFavoriteData();
-                                                    }}>
-                                                    ♥
-                                                </button>
+                                                    <span className="rating__stars" style={{ '--rating': product.rating?.stars ?? 0 }} />
+                                                    <span className="rating__value">{product.rating?.stars ?? '-'}</span>
+                                                    <span className="rating__count">({product.rating?.count ?? 0})</span>
+                                                </div>
                                             </div>
                                         </div>
+
                                         <div className="product-card__footer">
-                                            <span className="price price--md price--primary"><span
-                                                className="price__prefix">from</span>{formatMoney(favoriteProduct.product.priceCents * 10)}</span>
+                                            <span className="price price--md price--primary"><span className="price__prefix">{t('from')}</span>{formatMoney(product.priceCents)}</span>
                                         </div>
                                     </div>
                                 </article>
-                            )
-                        })}
+                            </div>
+                        ))}
                     </div>
-                    <div style={{ height: "60px" }}></div>
                 </div>
             </main>
             <Footer />
         </div>
-    )
+    );
 }
